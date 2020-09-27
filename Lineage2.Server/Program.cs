@@ -1,5 +1,7 @@
-﻿using Serilog;
+﻿using Newtonsoft.Json;
+using Serilog;
 using System;
+using System.IO;
 
 namespace Lineage2.Server
 {
@@ -11,6 +13,10 @@ namespace Lineage2.Server
                 .MinimumLevel.Debug()
                 .WriteTo.Console()
                 .CreateLogger();
+
+            var serverConfig = JsonConvert.DeserializeObject<ServerConfig>(File.ReadAllText(@"ServerConfig.json"));
+            var gameServer = new GameServer(Log.Logger, serverConfig);
+            gameServer.Start();
 
             Console.WriteLine("Hello World!");
             Console.ReadKey();
