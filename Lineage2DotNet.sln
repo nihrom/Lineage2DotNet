@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lineage2.Server", "Lineage2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lineage2.Network", "Lineage2.Network\Lineage2.Network.csproj", "{F2546014-167F-4844-A148-596A6262F659}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lineage2.Unility", "Lineage2.Unility\Lineage2.Unility.csproj", "{F009E4D1-6A65-4E6E-8F4C-A09A54E8FB40}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{F2546014-167F-4844-A148-596A6262F659}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2546014-167F-4844-A148-596A6262F659}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2546014-167F-4844-A148-596A6262F659}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F009E4D1-6A65-4E6E-8F4C-A09A54E8FB40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F009E4D1-6A65-4E6E-8F4C-A09A54E8FB40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F009E4D1-6A65-4E6E-8F4C-A09A54E8FB40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F009E4D1-6A65-4E6E-8F4C-A09A54E8FB40}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
