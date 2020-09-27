@@ -13,6 +13,7 @@ namespace Lineage2.Server
                 .CreateLogger();
 
             Console.WriteLine("Hello World!");
+            Console.ReadKey();
         }
     }
 }
