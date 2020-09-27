@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 
 namespace Lineage2Server
 {
@@ -6,6 +7,11 @@ namespace Lineage2Server
     {
         static void Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .CreateLogger();
+
             Console.WriteLine("Hello World!");
         }
     }
