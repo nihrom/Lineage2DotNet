@@ -1,7 +1,7 @@
 ﻿using Serilog;
 using System;
 
-namespace Lineage2Server
+namespace Lineage2.Server
 {
     class Program
     {
