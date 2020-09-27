@@ -4,4 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="LoginService\InPackets\" />
+    <Folder Include="LoginService\OutWriters\" />
+  </ItemGroup>
+
 </Project>
