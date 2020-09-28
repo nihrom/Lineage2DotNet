@@ -8,7 +8,7 @@ namespace Lineage2.Network
     public abstract class OutPacketWriter
     {
         private readonly MemoryStream _stream = new MemoryStream();
-        public byte[] BytePacket => _stream.ToArray();
+        public byte[] PacketBytes => _stream.ToArray();
         public long Length => _stream.Length;
 
         protected void WriteBytesArray(byte[] value)
