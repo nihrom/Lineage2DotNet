@@ -11,19 +11,21 @@ namespace Lineage2.LoginService
 {
     public class LoginServer
     {
-        private readonly ILogger _logger;
-        private readonly LoginServiceConfig _config;
+        private readonly ILogger logger;
+        private readonly LoginServiceConfig config;
+        private readonly ConnectionHandler connectionHandler;
         private TcpListener _listener;
 
-        public LoginServer(ILogger logger, LoginServiceConfig config)
+        public LoginServer(ILogger logger, LoginServiceConfig config, ConnectionHandler connectionHandler)
         {
-            _logger = logger;
-            _config = config;
+            this.logger = logger;
+            this.config = config;
+            this.connectionHandler = connectionHandler;
         }
 
         public void Start()
         {
-            _listener = new TcpListener(IPAddress.Parse(_config.Host), _config.LoginPort);
+            _listener = new TcpListener(IPAddress.Parse(config.Host), config.LoginPort);
 
             try
             {
@@ -31,12 +33,13 @@ namespace Lineage2.LoginService
             }
             catch (SocketException ex)
             {
-                _logger.Error($"Socket Error: '{ex.SocketErrorCode}'. Message: '{ex.Message}' (Error Code: '{ex.NativeErrorCode}')");
-                _logger.Information("Press ENTER to exit...");
+                logger.Error($"Ошибка в сокете: '{ex.SocketErrorCode}'. Сообщение: '{ex.Message}' (Код ошибки: '{ex.NativeErrorCode}')");
+                logger.Information("Нажмите ENTER для завершения...");
                 Console.Read();
                 Environment.Exit(0);
             }
-            _logger.Information($"Auth server listening clients at {_config.Host}:{_config.LoginPort}");
+
+            logger.Information($"Сервер аутентификации слушает входящих клиентов на {config.Host}:{config.LoginPort}");
             WaitForClients();
         }
 
@@ -45,17 +48,15 @@ namespace Lineage2.LoginService
             while (true)
             {
                 TcpClient client = await _listener.AcceptTcpClientAsync();
-#pragma warning disable 4014
-                Task.Factory.StartNew(() => AcceptClient(client));
-#pragma warning restore 4014
+                _ = Task.Factory.StartNew(() => AcceptClient(client));
             }
         }
 
         private void AcceptClient(TcpClient client)
         {
-            _logger.Information($"Received connection request from: {client.Client.RemoteEndPoint}");
+            logger.Information($"Получен запрос на подключение от: {client.Client.RemoteEndPoint}");
 
-            //TODO:Тут надо обрабатывать новые подключения клментов
+            connectionHandler.Handle(client);
         }
     }
 }

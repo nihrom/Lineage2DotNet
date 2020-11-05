@@ -15,7 +15,8 @@ namespace Lineage2.LoginService
                 .CreateLogger();
 
             var loginServiceConfig = JsonConvert.DeserializeObject<LoginServiceConfig>(File.ReadAllText(@"LoginServiceConfig.json"));
-            var loginServer = new LoginServer(Log.Logger, loginServiceConfig);
+            var connectionHandller = new ConnectionHandler();
+            var loginServer = new LoginServer(Log.Logger, loginServiceConfig, connectionHandller);
             loginServer.Start();
 
             Console.WriteLine("Hello World!");

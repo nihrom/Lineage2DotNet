@@ -11,6 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Lineage2.Network\Lineage2.Network.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="L2Crypt">
       <HintPath>libs\L2Crypt.dll</HintPath>
     </Reference>

@@ -19,7 +19,7 @@ namespace Lineage2.Server
             gameServer.Start();
 
             Console.WriteLine("Hello World!");
-            Console.ReadKey();
+            Console.ReadLine();
         }
     }
 }
