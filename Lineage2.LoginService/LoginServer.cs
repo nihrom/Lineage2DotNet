@@ -39,7 +39,7 @@ namespace Lineage2.LoginService
                 Environment.Exit(0);
             }
 
-            logger.Information($"Сервер аутентификации слушает входящих клиентов на {config.Host}:{config.LoginPort}");
+            logger.Information($"Сервер аутентификации слушает входящих клиентов на {_listener.LocalEndpoint}");
             WaitForClients();
         }
 

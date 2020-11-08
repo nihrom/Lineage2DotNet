@@ -48,7 +48,7 @@ namespace Lineage2.LoginService
             Packet p = new Packet(Opcode);
             p.WriteByte(1, serverId); //сначала идет количество серверов, потом последний сервер на котором был игрок
             int bits = 0x40;
-            if (true) // если сервер в тестовом моде
+            if (false) // если сервер в тестовом моде
                 bits |= 0x04;
             p.WriteByte(serverId);
             p.WriteByteArray(serverIp.Split('.').Select(x => byte.Parse(x)).ToArray());
@@ -56,7 +56,7 @@ namespace Lineage2.LoginService
             p.WriteByte(0);
             p.WriteByte(1); // пвп?
             p.WriteShort(1);
-            p.WriteShort(100);
+            p.WriteShort(101);
             p.WriteByte(1); // статус сервера
             p.WriteInt(bits);
             p.WriteByte(0); //brackets
@@ -89,5 +89,4 @@ namespace Lineage2.LoginService
             return p;
         }
     }
-
 }

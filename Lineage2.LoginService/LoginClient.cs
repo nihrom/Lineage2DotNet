@@ -86,6 +86,7 @@ namespace Lineage2.LoginService
 
                     if (ie.MoveNext())
                     {
+                        logger.Information($"Логин сервер отправялет пакет:{ie.Current.FirstOpcode:X2}");
                         _ = Task.Factory.StartNew(() => SendAsync(ie.Current));
                     }
 

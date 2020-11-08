@@ -4,24 +4,28 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Lineage2.Server
 {
     public class GameServer
     {
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
         private readonly ServerConfig _serverConfig;
         private TcpListener _listener;
+        private ConnectionHandler connectionHandler;
 
-        public GameServer(ILogger logger, ServerConfig serverConfig)
+        public GameServer(ILogger logger, ServerConfig serverConfig, ConnectionHandler connectionHandler)
         {
-            _logger = logger;
+            this.logger = logger;
             _serverConfig = serverConfig;
+            this.connectionHandler = connectionHandler;
         }
 
         public void Start()
         {
-            _listener = new TcpListener(IPAddress.Any, _serverConfig.Port);
+            //_listener = new TcpListener(IPAddress.Any, _serverConfig.Port);
+            _listener = new TcpListener(IPAddress.Parse(_serverConfig.Host), _serverConfig.Port);
 
             try
             {
@@ -29,31 +33,30 @@ namespace Lineage2.Server
             }
             catch (SocketException ex)
             {
-                _logger.Error($"Socket Error: '{ex.SocketErrorCode}'. Message: '{ex.Message}' (Error Code: '{ex.NativeErrorCode}')");
-                _logger.Information("Press ENTER to exit...");
+                logger.Error($"Ошибка в сокете: '{ex.SocketErrorCode}'. Сообщение: '{ex.Message}' (Код ошибки: '{ex.NativeErrorCode}')");
+                logger.Information("Нажмите ENTER для завершения...");
                 Console.Read();
                 Environment.Exit(0);
             }
 
-            _logger.Information($"Listening Gameservers on port {_serverConfig.Port}");
-
+            logger.Information($"Сервер аутентификации слушает входящих клиентов на {_listener.LocalEndpoint}");
             WaitForClients();
         }
 
-        private void WaitForClients()
+        private async void WaitForClients()
         {
-            _listener.BeginAcceptTcpClient(OnClientConnected, null);
+            while (true)
+            {
+                TcpClient client = await _listener.AcceptTcpClientAsync();
+                _ = Task.Factory.StartNew(() => AcceptClient(client));
+            }
         }
 
-        private void OnClientConnected(IAsyncResult asyncResult)
+        private void AcceptClient(TcpClient client)
         {
-            TcpClient clientSocket = _listener.EndAcceptTcpClient(asyncResult);
+            logger.Information($"Получен запрос на подключение от: {client.Client.RemoteEndPoint}");
 
-            _logger.Information($"Received connection request from: {clientSocket.Client.RemoteEndPoint}");
-
-            //TODO:Тут надо как обрабатывать подключенного пользователя
-
-            WaitForClients();
+            connectionHandler.Handle(client);
         }
     }
 }

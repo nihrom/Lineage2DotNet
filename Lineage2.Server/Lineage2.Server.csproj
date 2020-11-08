@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -14,6 +14,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lineage2.Network\Lineage2.Network.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="L2Crypt">
+      <HintPath>..\Lineage2.LoginService\libs\L2Crypt.dll</HintPath>
+    </Reference>
+    <Reference Include="Org.BouncyCastle">
+      <HintPath>..\Lineage2.LoginService\libs\Org.BouncyCastle.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

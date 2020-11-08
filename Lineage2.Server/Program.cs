@@ -15,7 +15,8 @@ namespace Lineage2.Server
                 .CreateLogger();
 
             var serverConfig = JsonConvert.DeserializeObject<ServerConfig>(File.ReadAllText(@"ServerConfig.json"));
-            var gameServer = new GameServer(Log.Logger, serverConfig);
+            var connectionHandller = new ConnectionHandler();
+            var gameServer = new GameServer(Log.Logger, serverConfig, connectionHandller);
             gameServer.Start();
 
             Console.WriteLine("Hello World!");
