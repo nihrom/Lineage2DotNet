@@ -15,6 +15,7 @@ namespace Lineage2.Server
         public ServerPacketHandler()
         {
             //ClientPackets.TryAdd(0x00, typeof(ProtocolVersion));
+            //ClientPackets.TryAdd(0x08, typeof(AuthLogin));
         }
 
         public void Handle(Packet packet)
