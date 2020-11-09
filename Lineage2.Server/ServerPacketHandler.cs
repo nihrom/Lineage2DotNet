@@ -10,17 +10,24 @@ namespace Lineage2.Server
     public class ServerPacketHandler
     {
         private readonly ILogger logger = Log.Logger.ForContext<ServerPacketHandler>();
-        private static readonly ConcurrentDictionary<byte, Type> ClientPackets = new ConcurrentDictionary<byte, Type>();
+        private static readonly ConcurrentDictionary<byte, Action<Packet>> ClientPackets = new ConcurrentDictionary<byte, Action<Packet>>();
+        private MainController mainController;
 
-        public ServerPacketHandler()
+        public ServerPacketHandler(GameClient gameClient)
         {
-            //ClientPackets.TryAdd(0x00, typeof(ProtocolVersion));
-            //ClientPackets.TryAdd(0x08, typeof(AuthLogin));
+            mainController = new MainController(gameClient);
+            ClientPackets.TryAdd(0x00, mainController.ProtocolVersion);
+            ClientPackets.TryAdd(0x08, mainController.AuthLogin);
         }
 
         public void Handle(Packet packet)
         {
             logger.Information($"Получен пакет с Opcode:{packet.FirstOpcode:X2}"); //for State:{client.State}");
+            var optocode = packet.FirstOpcode;
+            if(ClientPackets.TryGetValue(optocode, out var action))
+            {
+                action(packet);
+            }
         }
     }
 }

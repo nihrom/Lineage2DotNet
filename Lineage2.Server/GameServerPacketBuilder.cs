@@ -11,7 +11,6 @@ namespace Lineage2.Server
         {
             byte opcode = 0x00;
             Packet p = new Packet(opcode);
-            p.WriteByte(0x00);
             p.WriteByte(0x01);
             p.WriteByteArray(key);
             p.WriteInt(0x01);

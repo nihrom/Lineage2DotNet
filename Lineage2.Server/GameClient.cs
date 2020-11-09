@@ -1,5 +1,6 @@
-﻿using L2Crypt;
+using L2Crypt;
 using Lineage2.Network;
+using Lineage2.Unility;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -15,14 +16,17 @@ namespace Lineage2.Server
         public byte[] BlowfishKey { get; private set; }
         private readonly TcpClient tcpClient;
         private readonly NetworkStream networkStream;
-        private readonly INetworkCrypt crypt;
+        private INetworkCrypt crypt;
 
         private readonly ILogger logger = Log.Logger.ForContext<GameClient>();
 
-        public Action<byte[]> decrypt = (arr) => {};
+        public Action<byte[]> decrypt = (arr) => { };
+
+        public readonly ServerPacketHandler packetHandler;
 
         public GameClient(TcpClient tcpClient, ScrambledKeyPair scrambledKeyPair, byte[] blowfishKey)
         {
+            packetHandler = new ServerPacketHandler(this);
             this.tcpClient = tcpClient;
             networkStream = tcpClient.GetStream();
             Random rnd = new Random();
@@ -63,7 +67,7 @@ namespace Lineage2.Server
 
                     var packet = new Packet(1, body);
 
-                    //Task.Factory.StartNew(() => _packetHandler.Handle(new Packet(1, buffer), this));
+                    _ = Task.Factory.StartNew(() => packetHandler.Handle(packet));
                 }
             }
             catch (Exception ex)
@@ -71,6 +75,15 @@ namespace Lineage2.Server
                 logger.Error($"Ошибка: {ex.Message}");
                 //TODO: Тут надо новерно закрывать соединение
             }
+        }
+
+        public byte[] EnableCrypt()
+        {
+            byte[] key = BlowFishKeygen.GetRandomKey();
+            var _crypt = new GameCrypt();
+            _crypt.SetKey(key);
+            crypt = _crypt;
+            return key;
         }
 
         private async Task<short> ReadBodyLengthAsync()

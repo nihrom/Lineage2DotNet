@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Lineage2.Network;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Lineage2.Server
 {
-    public class GameCrypt
+    public class GameCrypt : INetworkCrypt
     {
         private readonly byte[] _inkey = new byte[16];
         private readonly byte[] _outkey = new byte[16];
