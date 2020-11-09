@@ -42,7 +42,7 @@ namespace Lineage2.Server
             var _loginKey2 = packet.ReadInt();
 
             logger.Information("AuthLogin с неймом - {0} и ключами - {1},{2},{3},{4}", _loginName, _playKey2, _playKey1, _loginKey1, _loginKey2);
-            var packetSend = packetBuilder.CharList();
+            var packetSend = packetBuilder.CharList(_playKey1);
             _ = gameClient.SendAsync(packetSend);
         }
     }

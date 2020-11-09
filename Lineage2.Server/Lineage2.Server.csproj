@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Lineage2.Model\Lineage2.Model.csproj" />
     <ProjectReference Include="..\Lineage2.Network\Lineage2.Network.csproj" />
   </ItemGroup>
 
