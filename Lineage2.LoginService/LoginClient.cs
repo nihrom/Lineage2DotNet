@@ -46,6 +46,7 @@ namespace Lineage2.LoginService
 
         public async Task SendAsync(Packet p)
         {
+            logger.Information($"Логин сервер отправялет пакет:{p.FirstOpcode:X2}");
             byte[] data = p.GetBuffer();
             data = loginCrypt.Encrypt(data, 0, data.Length);
 
@@ -86,7 +87,6 @@ namespace Lineage2.LoginService
 
                     if (ie.MoveNext())
                     {
-                        logger.Information($"Логин сервер отправялет пакет:{ie.Current.FirstOpcode:X2}");
                         _ = Task.Factory.StartNew(() => SendAsync(ie.Current));
                     }
 
