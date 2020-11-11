@@ -79,8 +79,8 @@ namespace Lineage2.Server
                 p.WriteDouble((double)1000);//player.CharStatus.CurrentHp);
                 p.WriteDouble((double)700);//player.CharStatus.CurrentMp);
 
-                p.WriteInt(100000); //SP
-                p.WriteLong(100); //XP
+                p.WriteInt(1000); //SP
+                p.WriteLong(10); //XP
 
                 p.WriteInt(1);//player.Level);
                 p.WriteInt(0); //Karma
@@ -125,6 +125,263 @@ namespace Lineage2.Server
                 p.WriteByte(0); //GetEnchantValue
                 p.WriteInt(0x00); // augment
             }
+
+            return p;
+        }
+
+        public Packet CharacterSelected(int sessionKeyPlayOk1)
+        {
+            byte opcode = 0x15;
+            Packet p = new Packet(opcode);
+
+            L2Player _player = new L2Player()
+            {
+                CharTemplate = new CharTemplate(),
+                AccountName = "Nihrom",
+                ClassId = ClassId.OrcFighter,
+                Face = Face.TypeB,
+                HairColor = HairColor.TypeB,
+                HairStyleId = HairStyleId.TypeD,
+                Sex = Gender.Male,
+                Name = "OrkNagibator",
+                ObjId = 255
+            };
+
+            p.WriteString(_player.Name);
+            p.WriteInt(_player.ObjId);
+            p.WriteString(_player.Title);
+            p.WriteInt(sessionKeyPlayOk1);
+
+            p.WriteInt(0);//_player.ClanId
+            p.WriteInt(0x00); //??
+            p.WriteInt((int)_player.Sex);
+            p.WriteInt((int)_player.ClassId.ClassRace);
+
+            p.WriteInt((int)_player.ClassId.Id);
+            p.WriteInt(0x01); // active ??
+            p.WriteInt(-56693);//player.X);
+            p.WriteInt(-113610);//player.Y);
+            p.WriteInt(-690);//player.Z);
+            p.WriteDouble(1000);
+            p.WriteDouble(700);
+            p.WriteInt(1000);
+
+            p.WriteLong(0);
+            p.WriteInt(1);
+            p.WriteInt(0);
+            p.WriteInt(0); //?
+
+            p.WriteInt(_player.CharTemplate.BaseInt);
+            p.WriteInt(_player.CharTemplate.BaseStr);
+            p.WriteInt(_player.CharTemplate.BaseCon);
+            p.WriteInt(_player.CharTemplate.BaseMen);
+            p.WriteInt(_player.CharTemplate.BaseDex);
+            p.WriteInt(_player.CharTemplate.BaseWit);
+
+            for (int i = 0; i < 30; i++)
+                p.WriteInt(0x00);
+
+            p.WriteInt(0x00); // c3 work
+            p.WriteInt(0x00); // c3 work
+
+            p.WriteInt(0);
+
+            p.WriteInt(0x00); // c3
+
+            p.WriteInt((int)_player.ClassId.Id);
+
+            p.WriteInt(0x00); // c3 InspectorBin
+            p.WriteInt(0x00); // c3
+            p.WriteInt(0x00); // c3
+            p.WriteInt(0x00); // c3
+
+            return p;
+        }
+
+        public Packet UserInfo()
+        {
+            byte opcode = 0x04;
+            Packet p = new Packet(opcode);
+
+            L2Player _player = new L2Player()
+            {
+                CharTemplate = new CharTemplate(),
+                AccountName = "Nihrom",
+                ClassId = ClassId.OrcFighter,
+                Face = Face.TypeB,
+                HairColor = HairColor.TypeB,
+                HairStyleId = HairStyleId.TypeD,
+                Sex = Gender.Male,
+                Name = "OrkNagibator",
+                ObjId = 255
+            };
+
+
+            p.WriteInt(-56693);//player.X);
+            p.WriteInt(-113610);//player.Y);
+            p.WriteInt(-691);//player.Z);
+            p.WriteInt(28); //_player.Heading
+            p.WriteInt(_player.ObjId);
+
+            p.WriteString(_player.Name);
+
+            p.WriteInt((int)_player.ClassId.ClassRace);
+            p.WriteInt((int)_player.Sex);
+            p.WriteInt((int)_player.ClassId.Id);
+            p.WriteInt(_player.Level);
+            p.WriteLong(10);
+
+            p.WriteInt(_player.CharTemplate.BaseStr);
+            p.WriteInt(_player.CharTemplate.BaseDex);
+            p.WriteInt(_player.CharTemplate.BaseCon);
+            p.WriteInt(_player.CharTemplate.BaseInt);
+            p.WriteInt(_player.CharTemplate.BaseWit);
+            p.WriteInt(_player.CharTemplate.BaseMen);
+
+            p.WriteInt(1000); //max hp
+            p.WriteInt(1000);
+            p.WriteInt(700); //max mp
+            p.WriteInt(700);
+            p.WriteInt(1000);
+            p.WriteInt(20);//_player.CurrentWeight
+            p.WriteInt(100);
+
+            p.WriteInt(20); //_player.Inventory.GetPaperdollItem(Inventory.PaperdollRhand) != null ? 40 : 20); // 20 no weapon, 40 weapon equipped
+
+            for (byte id = 0; id < 17; id++)
+                p.WriteInt(0);
+
+            for (byte id = 0; id < 17; id++)
+                p.WriteInt(0);
+
+            // c6 new h's
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteInt(0x00); //player.Inventory.getPaperdollAugmentId(InvPC.EQUIPITEM_RHand));
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteInt(0x00); //player.Inventory.getPaperdollAugmentId(InvPC.EQUIPITEM_LHand));
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+            p.WriteShort(0x00);
+
+            p.WriteInt((int)_player.CharTemplate.BasePAtk);
+            p.WriteInt(300);
+            p.WriteInt(100);
+            p.WriteInt(2);
+            p.WriteInt(2);
+            p.WriteInt(10);
+            p.WriteInt(50);
+            p.WriteInt(150);
+            p.WriteInt(300); //? еще раз?
+            p.WriteInt(100);
+
+            p.WriteInt(0);
+            p.WriteInt(0);
+
+            p.WriteInt(200);
+            p.WriteInt(180);
+            p.WriteInt(50); // swimspeed
+            p.WriteInt(50); // swimspeed
+            p.WriteInt(0); //?
+            p.WriteInt(0); //?
+            p.WriteInt(200);
+            p.WriteInt(180);
+            p.WriteDouble(1); //run speed multiplier
+            p.WriteDouble(1); //atk speed multiplier
+
+            p.WriteDouble(1);
+            p.WriteDouble(2);
+
+            p.WriteInt((int)_player.HairStyleId);
+            p.WriteInt((int)_player.HairColor);
+            p.WriteInt((int)_player.Face);
+            p.WriteInt(1);
+
+            p.WriteString(_player.Title);
+
+            p.WriteInt(0);//_player.ClanId
+            p.WriteInt(0);//_player.ClanCrestId
+            p.WriteInt(0);//_player.AllianceId
+            p.WriteInt(0);//_player.AllianceCrestId
+
+            p.WriteInt(0); //_relation
+            p.WriteByte(0);
+            p.WriteByte(0); //
+            p.WriteByte(0);
+            p.WriteInt(0);
+            p.WriteInt(0);
+
+            p.WriteShort(0);//_player.Cubics.Count
+
+            //_player.Cubics.ForEach(cub =>p.WriteShort(cub.Template.Id));
+
+            p.WriteByte(0); //1-isInPartyMatchRoom
+
+            p.WriteInt(0);
+
+            //byte flymode = 0;
+
+            //if (player.TransformID > 0)
+            //    flymode = player.Transform.Template.MoveMode;
+
+            p.WriteByte(0x00);
+
+            p.WriteInt(0);//_player.ClanPrivs
+
+            p.WriteShort(0); //c2  recommendations remaining
+            p.WriteShort(0); //c2  recommendations received
+            p.WriteInt(0); //moun t npcid
+            p.WriteShort(80);
+
+            p.WriteInt((int)_player.ClassId.Id);
+            p.WriteInt(0); // special effects? circles around player...
+            p.WriteInt(100); //max cp
+            p.WriteInt(100);
+            p.WriteByte(0);
+            p.WriteByte(0);
+            p.WriteInt(0);//_player.GetClanCrestLargeId()
+            p.WriteByte(0);
+
+            //byte hero = _player.Heroic;
+            p.WriteByte(0);
+
+            p.WriteByte(0x00); //Fishing Mode
+            p.WriteInt(0);//_player.GetFishx()); //fishing x
+            p.WriteInt(0);//_player.GetFishy()); //fishing y
+            p.WriteInt(0);//_player.GetFishz()); //fishing z
+            p.WriteInt(0xFFFFFF);
+
+            p.WriteByte(1);//_player.IsRunning);
+
+            p.WriteInt(0);//_player.ClanRank()
+            p.WriteInt(0);//_player.ClanType);
+
+            p.WriteInt(0xFFFF77);//_player.GetTitleColor());
+            p.WriteInt(0);
 
             return p;
         }
