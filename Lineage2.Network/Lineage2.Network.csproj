@@ -17,7 +17,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Serilog" Version="2.10.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Lineage2.Unility\Lineage2.Unility.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="L2Crypt">
+      <HintPath>..\Lineage2.LoginService\libs\L2Crypt.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
