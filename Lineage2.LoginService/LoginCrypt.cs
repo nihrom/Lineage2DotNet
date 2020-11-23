@@ -14,6 +14,8 @@ namespace Lineage2.LoginService
         private readonly Random random = new Random();
         private readonly BlowfishCipher cipher;
 
+        public byte[] BlowfishKey => key;
+
         public LoginCrypt()
         {
             cipher = new BlowfishCipher(key);
@@ -22,6 +24,11 @@ namespace Lineage2.LoginService
         internal void UpdateKey(byte[] blowfishKey)
         {
             key = blowfishKey;
+        }
+
+        public void EnableCrypt(byte[] blowfishKey)
+        {
+            UpdateKey(blowfishKey);
         }
 
         public void Decrypt(byte[] arr)

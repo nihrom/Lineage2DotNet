@@ -11,10 +11,18 @@ namespace Lineage2.Server
         private readonly byte[] _outkey = new byte[16];
         private bool _isEnabled;
 
+        public byte[] BlowfishKey => throw new NotImplementedException();
+
         public void SetKey(byte[] key)
         {
             key.CopyTo(_inkey, 0);
             key.CopyTo(_outkey, 0);
+        }
+
+        public void EnableCrypt(byte[] blowfishKey)
+        {
+            SetKey(blowfishKey);
+            _isEnabled = true;
         }
 
         public void Decrypt(byte[] raw)
@@ -39,9 +47,7 @@ namespace Lineage2.Server
 
         public void Encrypt(byte[] raw)
         {
-            if (!_isEnabled)
-                _isEnabled = true;
-            else
+            if (_isEnabled)
             {
                 uint num1 = 0;
                 for (int index = 0; index < raw.Length; ++index)
