@@ -36,7 +36,6 @@ namespace Lineage2.Network
         public async Task SendAsync(Packet p)
         {
             SendingPacket(p);
-            logger.Information($"Отправка пакета:{p.FirstOpcode:X2}");
             byte[] data = p.GetBuffer();
             Crypt.Encrypt(data);
 
