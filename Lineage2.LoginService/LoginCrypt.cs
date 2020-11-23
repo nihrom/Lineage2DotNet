@@ -1,11 +1,12 @@
 ﻿using L2Crypt;
+using Lineage2.Network;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Lineage2.LoginService
 {
-    class LoginCrypt
+    class LoginCrypt : INetworkCrypt
     {
         private byte[] key = { 0x6b, 0x60, 0xcb, 0x5b, 0x82, 0xce, 0x90, 0xb1, 0xcc, 0x2b, 0x6c, 0x55, 0x6c, 0x6c, 0x6c, 0x6c };
         private bool updatedKey;
@@ -21,6 +22,16 @@ namespace Lineage2.LoginService
         internal void UpdateKey(byte[] blowfishKey)
         {
             key = blowfishKey;
+        }
+
+        public void Decrypt(byte[] arr)
+        {
+            Decrypt(ref arr, 0, arr.Length);
+        }
+
+        public void Encrypt(byte[] raw)
+        {
+            Encrypt(raw, 0, raw.Length);
         }
 
         public bool Decrypt(ref byte[] data, int offset, int size)
