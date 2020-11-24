@@ -15,7 +15,7 @@ namespace Lineage2.LoginService
             p.WriteInt(client.SessionId, 0x0000c621);
             p.WriteByteArray(client.RsaPair._scrambledModulus);
             p.WriteInt(0x29DD954E, 0x77C39CFC, unchecked((int)0x97ADB620), 0x07BDE0F7);
-            p.WriteByteArray(client.BlowfishKey);
+            p.WriteByteArray(client.L2Connection.Crypt.BlowfishKey);
             p.WriteByteArray(new byte[1]);
             return p;
         }

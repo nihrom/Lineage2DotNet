@@ -1,4 +1,5 @@
 ﻿using L2Crypt;
+using Lineage2.Network;
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
@@ -19,7 +20,8 @@ namespace Lineage2.LoginService
 
         public void Handle(TcpClient tcpClient)
         {
-            var loginClient = new LoginClient(tcpClient, scrambledKeyPair, blowfishKey);
+            var connection = new L2Connection(tcpClient);
+            var loginClient = new LoginClient(scrambledKeyPair, blowfishKey, connection);
             clients.Add(loginClient);
         }
     }

@@ -16,10 +16,10 @@ namespace Lineage2.Network
         private readonly NetworkStream networkStream;
         private readonly ILogger logger = Log.Logger.ForContext<L2Connection>();
 
-        public INetworkCrypt Crypt { get; set; } = new EmptyNetworkCrypt();;
+        public INetworkCrypt Crypt { get; set; } = new EmptyNetworkCrypt();
 
-        event Action<Packet> ReceivedPacket;
-        event Action<Packet> SendingPacket;
+        public event Action<Packet> ReceivedPacket;
+        public event Action<Packet> SendingPacket;
 
         public L2Connection(TcpClient tcpClient)
         {
@@ -35,7 +35,7 @@ namespace Lineage2.Network
         /// <returns></returns>
         public async Task SendAsync(Packet p)
         {
-            SendingPacket(p);
+            SendingPacket?.Invoke(p);
             byte[] data = p.GetBuffer();
             Crypt.Encrypt(data);
 
@@ -65,7 +65,7 @@ namespace Lineage2.Network
                     await ReadBodyAsync(body, bodyLength);
                     var packet = new Packet(1, body);
 
-                    ReceivedPacket(packet);
+                    ReceivedPacket?.Invoke(packet);
                 }
             }
             catch (Exception ex)
@@ -108,5 +108,6 @@ namespace Lineage2.Network
             //TODO: Возможно декрипт надо обернуть в try catch
             Crypt.Decrypt(body);
         }
+
     }
 }
