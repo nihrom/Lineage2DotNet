@@ -25,14 +25,11 @@ namespace Lineage2.Server
             int _protocol = packet.ReadInt();
 
             logger.Information("Протокол соединения: {0}", _protocol);
-
-            var key = gameClient.EnableCrypt();
+            var key = gameClient.L2Connection.Crypt.BlowfishKey;
             var packetSend = packetBuilder.CryptInit(key);
-
-            //var pac = new KeyPacket(key);
-            //pac.Write();
-
+            //TODO: Тут хорошо бы сначала дождаться отправки, а потом только включить шифрование
             _ = gameClient.SendAsync(packetSend);
+            gameClient.L2Connection.Crypt.EnableCrypt();
         }
 
         public void AuthLogin(Packet packet)

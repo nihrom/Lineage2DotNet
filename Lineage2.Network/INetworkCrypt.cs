@@ -9,6 +9,6 @@ namespace Lineage2.Network
         byte[] BlowfishKey { get; }
         void Decrypt(byte[] arr);
         void Encrypt(byte[] raw);
-        void EnableCrypt(byte[] blowfishKey);
+        void EnableCrypt();
     }
 }

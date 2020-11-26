@@ -1,4 +1,6 @@
 ﻿using L2Crypt;
+using Lineage2.Network;
+using Lineage2.Unility;
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
@@ -19,7 +21,10 @@ namespace Lineage2.Server
 
         public void Handle(TcpClient tcpClient)
         {
-            var loginClient = new GameClient(tcpClient, scrambledKeyPair, blowfishKey);
+            byte[] key = BlowFishKeygen.GetRandomKey();
+            var crypt = new GameCrypt(key);
+            var connection = new L2Connection(tcpClient, crypt);
+            var loginClient = new GameClient(connection);
             clients.Add(loginClient);
         }
     }

@@ -16,15 +16,16 @@ namespace Lineage2.Network
         private readonly NetworkStream networkStream;
         private readonly ILogger logger = Log.Logger.ForContext<L2Connection>();
 
-        public INetworkCrypt Crypt { get; set; } = new EmptyNetworkCrypt();
+        public INetworkCrypt Crypt { get; set; }
 
         public event Action<Packet> ReceivedPacket;
         public event Action<Packet> SendingPacket;
 
-        public L2Connection(TcpClient tcpClient)
+        public L2Connection(TcpClient tcpClient, INetworkCrypt crypt)
         {
             this.tcpClient = tcpClient;
             networkStream = tcpClient.GetStream();
+            Crypt = crypt;
             Task.Factory.StartNew(ReadAsync);
         }
 

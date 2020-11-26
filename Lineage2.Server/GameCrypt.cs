@@ -11,7 +11,12 @@ namespace Lineage2.Server
         private readonly byte[] _outkey = new byte[16];
         private bool _isEnabled;
 
-        public byte[] BlowfishKey => throw new NotImplementedException();
+        public GameCrypt(byte[] blowfishKey)
+        {
+            SetKey(blowfishKey);
+        }
+
+        public byte[] BlowfishKey => _inkey;
 
         public void SetKey(byte[] key)
         {
@@ -19,9 +24,8 @@ namespace Lineage2.Server
             key.CopyTo(_outkey, 0);
         }
 
-        public void EnableCrypt(byte[] blowfishKey)
+        public void EnableCrypt()
         {
-            SetKey(blowfishKey);
             _isEnabled = true;
         }
 

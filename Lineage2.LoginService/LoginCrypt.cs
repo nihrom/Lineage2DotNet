@@ -9,6 +9,7 @@ namespace Lineage2.LoginService
     class LoginCrypt : INetworkCrypt
     {
         private byte[] key = { 0x6b, 0x60, 0xcb, 0x5b, 0x82, 0xce, 0x90, 0xb1, 0xcc, 0x2b, 0x6c, 0x55, 0x6c, 0x6c, 0x6c, 0x6c };
+        private byte[] blowfishKey;
         private bool updatedKey;
 
         private readonly Random random = new Random();
@@ -16,9 +17,10 @@ namespace Lineage2.LoginService
 
         public byte[] BlowfishKey => key;
 
-        public LoginCrypt()
+        public LoginCrypt(byte[] blowfishKey)
         {
             cipher = new BlowfishCipher(key);
+            this.blowfishKey = blowfishKey;
         }
 
         internal void UpdateKey(byte[] blowfishKey)
@@ -26,7 +28,7 @@ namespace Lineage2.LoginService
             key = blowfishKey;
         }
 
-        public void EnableCrypt(byte[] blowfishKey)
+        public void EnableCrypt()
         {
             UpdateKey(blowfishKey);
         }

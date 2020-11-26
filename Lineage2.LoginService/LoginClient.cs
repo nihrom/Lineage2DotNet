@@ -35,7 +35,7 @@ namespace Lineage2.LoginService
             L2Connection.ReceivedPacket += LoggingReceivedPacket;
             L2Connection.SendingPacket += LoggingSendPacket;
             l2Connection.ReceivedPacket += OnReadAsync;
-            l2Connection.Crypt.EnableCrypt(blowfishKey);
+            l2Connection.Crypt.EnableCrypt();
         }
 
         public Task SendAsync(Packet p)

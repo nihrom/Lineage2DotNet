@@ -11,16 +11,19 @@ namespace Lineage2.LoginService
     {
         private List<LoginClient> clients = new List<LoginClient>();
         ScrambledKeyPair scrambledKeyPair = new ScrambledKeyPair(ScrambledKeyPair.genKeyPair());
-        private byte[] blowfishKey = new byte[16];
+
 
         public ConnectionHandler()
         {
-            new Random().NextBytes(blowfishKey);
+            
         }
 
         public void Handle(TcpClient tcpClient)
         {
-            var connection = new L2Connection(tcpClient);
+            byte[] blowfishKey = new byte[16];
+            new Random().NextBytes(blowfishKey);
+            var crypt = new LoginCrypt(blowfishKey);
+            var connection = new L2Connection(tcpClient, crypt);
             var loginClient = new LoginClient(scrambledKeyPair, blowfishKey, connection);
             clients.Add(loginClient);
         }
