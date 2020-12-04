@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lineage2.Model", "Lineage2.Model\Lineage2.Model.csproj", "{9370E4D2-635A-400B-BA4F-E915CBD77E3A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lineage2.Server", "Lineage2.Server\Lineage2.Server.csproj", "{F829BB6B-9AAA-4334-9F3E-A259F867AAB6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{13F5C1FF-A308-42F8-97D5-795C67E23223} = {13F5C1FF-A308-42F8-97D5-795C67E23223}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lineage2.Network", "Lineage2.Network\Lineage2.Network.csproj", "{F2546014-167F-4844-A148-596A6262F659}"
 EndProject
@@ -13,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lineage2.Unility", "Lineage
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lineage2.LoginService", "Lineage2.LoginService\Lineage2.LoginService.csproj", "{1940000A-54E0-452A-B40F-FDD307F3862D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lineage2.Repositories", "Lineage2.Repositories\Lineage2.Repositories.csproj", "{13F5C1FF-A308-42F8-97D5-795C67E23223}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lineage2.Repositories", "Lineage2.Repositories\Lineage2.Repositories.csproj", "{13F5C1FF-A308-42F8-97D5-795C67E23223}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -25,10 +25,15 @@ namespace Lineage2.Server
         public void Handle(Packet packet)
         {
             logger.Information($"Получен пакет с Opcode:{packet.FirstOpcode:X2}"); //for State:{client.State}");
+
             var optocode = packet.FirstOpcode;
             if(ClientPackets.TryGetValue(optocode, out var action))
             {
                 action(packet);
+            }
+            else
+            {
+                logger.Information($"Для пакета Opcode:{packet.FirstOpcode:X2} нет обработчика");
             }
         }
     }
