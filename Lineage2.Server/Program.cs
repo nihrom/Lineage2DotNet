@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Serilog;
 using Serilog.Extensions.Logging;
@@ -64,15 +65,21 @@ namespace Lineage2.Server
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder()
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureServices((hostbuilder, services) => 
+                .ConfigureHostConfiguration(configHost =>
                 {
-                    services.AddHostedService<Server>();
+                    configHost.SetBasePath(Directory.GetCurrentDirectory());
+                    configHost.AddJsonFile("ServerConfig.json", optional: true);
+                })
+                .ConfigureServices((hostbuilder, services) =>
+                {
+                    services.AddHostedService<ServerHostingService>();
+                    services.Configure<ServerConfig>(hostbuilder.Configuration.GetSection("ServerConfig"));
                 })
                 .ConfigureContainer<ContainerBuilder>((hostBuilder, builder) =>
                 {
-                    var str = hostBuilder.Configuration[""];
-                    builder.RegisterType<TestClass>();
-                    // registering services in the Autofac ContainerBuilder
+                    builder.RegisterType<GameServer>();
+                    builder.RegisterType<ConnectionHandler>();
+                    builder.Register<ServerConfig>(c=> c.Resolve<IOptions<ServerConfig>>().Value);
                 })
                 .UseSerilog(Log.Logger, false)
                 .UseConsoleLifetime();
