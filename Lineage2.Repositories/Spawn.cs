@@ -6,7 +6,7 @@ namespace Lineage2.Repositories
 {
     public class Spawn
     {
-        public int Id;
+        public int Id { get; set; }
         public int SpanwnTemplateId { get; set; }
 
         public int LocX { get; set; }
@@ -21,6 +21,6 @@ namespace Lineage2.Repositories
 
         public int RespawnRand { get; set; }
 
-        public int PerdiodOfDay { get; set; }
+        public int PeriodOfDay { get; set; }
     }
 }

@@ -74,12 +74,21 @@ namespace Lineage2.Server
                 {
                     services.AddHostedService<ServerHostingService>();
                     services.Configure<ServerConfig>(hostbuilder.Configuration.GetSection("ServerConfig"));
+                    services.AddDbContext<Lineage2DbContext>(options => 
+                        options.UseSqlServer(
+                            hostbuilder.Configuration["DB:LocalConnectionString"]
+                        )
+                    );
                 })
                 .ConfigureContainer<ContainerBuilder>((hostBuilder, builder) =>
                 {
+                    builder.RegisterType<DbSeed>()
+                        .As<IStartable>()
+                        .AutoActivate();
+
                     builder.RegisterType<GameServer>();
                     builder.RegisterType<ConnectionHandler>();
-                    builder.Register<ServerConfig>(c=> c.Resolve<IOptions<ServerConfig>>().Value);
+                    builder.Register<ServerConfig>(c => c.Resolve<IOptions<ServerConfig>>().Value);
                 })
                 .UseSerilog(Log.Logger, false)
                 .UseConsoleLifetime();
