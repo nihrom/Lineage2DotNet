@@ -1,54 +1,80 @@
-﻿using Lineage2.Model;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Lineage2.Model;
 using Lineage2.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Serilog;
+using Serilog.Extensions.Logging;
 using System;
 using System.IO;
-
+using System.Threading.Tasks;
 
 namespace Lineage2.Server
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.Console()
                 .CreateLogger();
 
+            await CreateHostBuilder(args)
+                .Build()
+                .RunAsync();
 
-             var builder = new ConfigurationBuilder();
-            // установка пути к текущему каталогу
-            builder.SetBasePath(Directory.GetCurrentDirectory());
-            // получаем конфигурацию из файла appsettings.json
-            builder.AddJsonFile("appsettings.json");
-            // создаем конфигурацию
-            var config = builder.Build();
-            // получаем строку подключения
+            //var builder = new ConfigurationBuilder();
+            //// установка пути к текущему каталогу
+            //builder.SetBasePath(Directory.GetCurrentDirectory());
+            //// получаем конфигурацию из файла appsettings.json
+            //builder.AddJsonFile("appsettings.json");
+            //// создаем конфигурацию
+            //var config = builder.Build();
+            //// получаем строку подключения
 
-            //string connectionString = config.GetConnectionString("DefaultConnection");
+            ////string connectionString = config.GetConnectionString("DefaultConnection");
 
-            var optionsBuilder = new DbContextOptionsBuilder<Lineage2DbContext>();
-            var options = optionsBuilder
-                .UseSqlServer(config["DB:LocalConnectionString"])
-                .Options;
+            //var optionsBuilder = new DbContextOptionsBuilder<Lineage2DbContext>();
+            //var options = optionsBuilder
+            //    .UseSqlServer(config["DB:LocalConnectionString"])
+            //    .Options;
 
-            using (Lineage2DbContext db = new Lineage2DbContext(options))
-            {
+            //using (Lineage2DbContext db = new Lineage2DbContext(options))
+            //{
 
-            }
+            //}
 
-            new NpcFactory().Initialize();
-            var serverConfig = JsonConvert.DeserializeObject<ServerConfig>(File.ReadAllText(@"ServerConfig.json"));
-            var connectionHandller = new ConnectionHandler();
-            var gameServer = new GameServer(Log.Logger, serverConfig, connectionHandller);
-            gameServer.Start();
+            //new NpcFactory().Initialize();
+            //var serverConfig = JsonConvert.DeserializeObject<ServerConfig>(File.ReadAllText(@"ServerConfig.json"));
+            //var connectionHandller = new ConnectionHandler();
+            //var gameServer = new GameServer(Log.Logger, serverConfig, connectionHandller);
+            //gameServer.Start();
 
-            Console.WriteLine("Hello World!");
-            Console.ReadLine();
+            //Console.WriteLine("Hello World!");
+            //Console.ReadLine();
         }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder()
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureServices((hostbuilder, services) => 
+                {
+                    services.AddHostedService<Server>();
+                })
+                .ConfigureContainer<ContainerBuilder>((hostBuilder, builder) =>
+                {
+                    var str = hostBuilder.Configuration[""];
+                    builder.RegisterType<TestClass>();
+                    // registering services in the Autofac ContainerBuilder
+                })
+                .UseSerilog(Log.Logger, false)
+                .UseConsoleLifetime();
     }
 }
