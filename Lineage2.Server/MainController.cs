@@ -3,7 +3,9 @@ using Lineage2.Network.ServerPackets.OutWrites;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Lineage2.Server
 {
@@ -20,7 +22,7 @@ namespace Lineage2.Server
             this.gameClient = gameClient;
         }
 
-        public void ProtocolVersion(Packet packet)
+        public async Task ProtocolVersion(Packet packet)
         {
             int _protocol = packet.ReadInt();
 
@@ -32,7 +34,7 @@ namespace Lineage2.Server
             gameClient.L2Connection.Crypt.EnableCrypt();
         }
 
-        public void AuthLogin(Packet packet)
+        public async Task AuthLogin(Packet packet)
         {
             var _loginName = packet.ReadString();
             var _playKey2 = packet.ReadInt();
@@ -47,7 +49,7 @@ namespace Lineage2.Server
             _ = gameClient.SendAsync(packetSend);
         }
 
-        public void CharacterSelected(Packet packet)
+        public async Task CharacterSelected(Packet packet)
         {
             int _charSlot = packet.ReadInt();
             int _unk1 = packet.ReadShort();
@@ -60,10 +62,26 @@ namespace Lineage2.Server
             _ = gameClient.SendAsync(paketSend);
         }
 
-        public void EnterWorld(Packet packet)
+        public async Task EnterWorld(Packet packet)
         {
             var packetSend = packetBuilder.UserInfo();
-            _ = gameClient.SendAsync(packetSend);
+            await gameClient.SendAsync(packetSend);
+            int counter = 0;
+            foreach (var spawn in WorldSpawnsTest.Spawns.Where(s => s.LocX < -56693 + 1000 && s.LocX > -56693 -1000 && s.LocY < -113610 + 1000 && s.LocY > -113610 - 1000))
+            {
+                counter++;
+                var packetSend2 = packetBuilder.NpcInfo(counter, spawn.LocX, spawn.LocY, spawn.LocZ);
+                await gameClient.SendAsync(packetSend2);
+                await Task.Delay(100);
+                if (counter >= 50)
+                    break;
+            }
+        }
+
+        public async Task ExSendManorList(Packet packet)
+        {
+            var packetSend = packetBuilder.ExSendManorList();
+            await gameClient.SendAsync(packetSend);
         }
     }
 }

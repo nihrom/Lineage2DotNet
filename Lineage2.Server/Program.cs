@@ -27,30 +27,12 @@ namespace Lineage2.Server
                 .WriteTo.Console()
                 .CreateLogger();
 
+            NpcFactory npcFactory = new NpcFactory();
+            npcFactory.Initialize();
+
             await CreateHostBuilder(args)
                 .Build()
                 .RunAsync();
-
-            //var builder = new ConfigurationBuilder();
-            //// установка пути к текущему каталогу
-            //builder.SetBasePath(Directory.GetCurrentDirectory());
-            //// получаем конфигурацию из файла appsettings.json
-            //builder.AddJsonFile("appsettings.json");
-            //// создаем конфигурацию
-            //var config = builder.Build();
-            //// получаем строку подключения
-
-            ////string connectionString = config.GetConnectionString("DefaultConnection");
-
-            //var optionsBuilder = new DbContextOptionsBuilder<Lineage2DbContext>();
-            //var options = optionsBuilder
-            //    .UseSqlServer(config["DB:LocalConnectionString"])
-            //    .Options;
-
-            //using (Lineage2DbContext db = new Lineage2DbContext(options))
-            //{
-
-            //}
 
             //new NpcFactory().Initialize();
             //var serverConfig = JsonConvert.DeserializeObject<ServerConfig>(File.ReadAllText(@"ServerConfig.json"));
@@ -89,6 +71,7 @@ namespace Lineage2.Server
                     builder.RegisterType<GameServer>();
                     builder.RegisterType<ConnectionHandler>();
                     builder.Register<ServerConfig>(c => c.Resolve<IOptions<ServerConfig>>().Value);
+                    builder.RegisterType<WorldSpawnsTest>().SingleInstance().AutoActivate();
                 })
                 .UseSerilog(Log.Logger, false)
                 .UseConsoleLifetime();

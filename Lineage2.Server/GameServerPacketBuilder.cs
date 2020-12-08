@@ -313,8 +313,8 @@ namespace Lineage2.Server
             p.WriteDouble(1); //run speed multiplier
             p.WriteDouble(1); //atk speed multiplier
 
-            p.WriteDouble(1);
-            p.WriteDouble(2);
+            p.WriteDouble(11);
+            p.WriteDouble(28);
 
             p.WriteInt((int)_player.HairStyleId);
             p.WriteInt((int)_player.HairColor);
@@ -382,6 +382,102 @@ namespace Lineage2.Server
 
             p.WriteInt(0xFFFF77);//_player.GetTitleColor());
             p.WriteInt(0);
+
+            return p;
+        }
+
+        public Packet ExSendManorList()
+        {
+            List<string> manorsName = new List<string>
+                {
+                    "gludio",
+                    "dion",
+                    "giran",
+                    "oren",
+                    "aden",
+                    "innadril",
+                    "goddard",
+                    "rune",
+                    "schuttgart"
+                };
+
+            byte opcode = 0xFE;
+            Packet p = new Packet(opcode);
+            p.WriteShort(0x1B);
+            p.WriteInt(manorsName.Count);
+
+            int id = 1;
+            foreach (string manor in manorsName)
+            {
+                p.WriteInt(id);
+                id++;
+                p.WriteString(manor);
+            }
+
+            return p;
+        }
+
+        public Packet NpcInfo(int objId, int x, int y, int z)
+        {
+            byte opcode = 0x16;
+            Packet p = new Packet(opcode);
+
+            p.WriteInt(objId);
+            p.WriteInt(12077 + 1000000);
+            p.WriteInt(0);
+            p.WriteInt(x);
+            p.WriteInt(y);
+            p.WriteInt(z);
+            p.WriteInt(0);
+            p.WriteInt(0x00);
+
+            double spd = 150;//_npc.CharacterStat.GetStat(EffectType.PSpeed);
+            double atkspd = 1200;//_npc.CharacterStat.GetStat(EffectType.BAttackSpd);
+            double cast = 1200;//_npc.CharacterStat.GetStat(EffectType.BCastingSpd);
+            double anim = (spd * 1f) / 120;
+            double anim2 = (1.1 * atkspd) / 277;
+
+            p.WriteInt((int)cast);
+            p.WriteInt((int)atkspd);
+            p.WriteInt((int)spd);
+            p.WriteInt((int)(spd * .8));
+            p.WriteInt(0); // swimspeed
+            p.WriteInt(0); // swimspeed
+            p.WriteInt(0);
+            p.WriteInt(0);
+            p.WriteInt(0);
+            p.WriteInt(0);
+
+            p.WriteDouble(anim);
+            p.WriteDouble(anim2);
+            p.WriteDouble(13);
+            p.WriteDouble(11.5);
+            p.WriteInt(0); // right hand weapon
+            p.WriteInt(0);
+            p.WriteInt(0); // left hand weapon
+            p.WriteByte(1); // name above char 1=true ... ??
+            p.WriteByte(0);
+            p.WriteByte(0);
+            p.WriteByte(0);
+            p.WriteByte(0); // invisible ?? 0=false  1=true   2=summoned (only works if model has a summon animation)
+            p.WriteString("NpcWolf");
+            p.WriteString("Title");
+            p.WriteInt(0x00); // Title color 0=client default
+            p.WriteInt(0x00); //pvp flag
+            p.WriteInt(0x00); // karma
+
+            p.WriteInt(0);
+            p.WriteInt(0);//_npc.ClanId
+            p.WriteInt(0);//_npc.ClanCrestId
+            p.WriteInt(0);//_npc.AllianceId
+            p.WriteInt(0);//_npc.AllianceCrestId
+            p.WriteByte(0); // C2
+
+            p.WriteByte(0);
+            p.WriteDouble(13);
+            p.WriteDouble(11.5);
+            p.WriteInt(0); // enchant
+            p.WriteInt(0); // C6
 
             return p;
         }
