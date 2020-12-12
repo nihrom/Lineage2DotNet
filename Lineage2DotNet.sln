@@ -18,6 +18,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lineage2.LoginService", "Li
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lineage2.Repositories", "Lineage2.Repositories\Lineage2.Repositories.csproj", "{13F5C1FF-A308-42F8-97D5-795C67E23223}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lineage2.Engine", "Lineage2.Engine\Lineage2.Engine.csproj", "{D89E60A6-E47F-4370-9236-7039869F686D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +50,10 @@ Global
 		{13F5C1FF-A308-42F8-97D5-795C67E23223}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13F5C1FF-A308-42F8-97D5-795C67E23223}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13F5C1FF-A308-42F8-97D5-795C67E23223}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D89E60A6-E47F-4370-9236-7039869F686D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D89E60A6-E47F-4370-9236-7039869F686D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D89E60A6-E47F-4370-9236-7039869F686D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D89E60A6-E47F-4370-9236-7039869F686D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
