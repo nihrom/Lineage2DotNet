@@ -16,6 +16,7 @@ using Serilog.Extensions.Logging;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Tools.NpcTemplateConvertXmlToJson;
 
 namespace Lineage2.Server
 {
@@ -27,7 +28,6 @@ namespace Lineage2.Server
                 .MinimumLevel.Debug()
                 .WriteTo.Console()
                 .CreateLogger();
-
 
             await CreateHostBuilder(args)
                 .Build()

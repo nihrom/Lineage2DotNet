@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lineage2.Engine", "Lineage2
 		{9370E4D2-635A-400B-BA4F-E915CBD77E3A} = {9370E4D2-635A-400B-BA4F-E915CBD77E3A}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tools", "Tools\Tools.csproj", "{535780B5-7205-4AB8-99AD-6A6110AF6641}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{D89E60A6-E47F-4370-9236-7039869F686D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D89E60A6-E47F-4370-9236-7039869F686D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D89E60A6-E47F-4370-9236-7039869F686D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{535780B5-7205-4AB8-99AD-6A6110AF6641}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{535780B5-7205-4AB8-99AD-6A6110AF6641}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{535780B5-7205-4AB8-99AD-6A6110AF6641}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{535780B5-7205-4AB8-99AD-6A6110AF6641}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
