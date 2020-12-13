@@ -417,17 +417,17 @@ namespace Lineage2.Server
             return p;
         }
 
-        public Packet NpcInfo(int objId, int x, int y, int z)
+        public Packet NpcInfo(L2Npc npc)
         {
             byte opcode = 0x16;
             Packet p = new Packet(opcode);
 
-            p.WriteInt(objId);
-            p.WriteInt(12077 + 1000000);
+            p.WriteInt(npc.ObjId);
+            p.WriteInt(npc.NpcTemplate.NpcId + 1000000);
             p.WriteInt(0);
-            p.WriteInt(x);
-            p.WriteInt(y);
-            p.WriteInt(z);
+            p.WriteInt(npc.X);
+            p.WriteInt(npc.Y);
+            p.WriteInt(npc.Z);
             p.WriteInt(0);
             p.WriteInt(0x00);
 
@@ -450,8 +450,8 @@ namespace Lineage2.Server
 
             p.WriteDouble(anim);
             p.WriteDouble(anim2);
-            p.WriteDouble(13);
-            p.WriteDouble(11.5);
+            p.WriteDouble(npc.NpcTemplate.CollisionRadius);
+            p.WriteDouble(npc.NpcTemplate.CollisionHeight);
             p.WriteInt(0); // right hand weapon
             p.WriteInt(0);
             p.WriteInt(0); // left hand weapon
@@ -460,8 +460,8 @@ namespace Lineage2.Server
             p.WriteByte(0);
             p.WriteByte(0);
             p.WriteByte(0); // invisible ?? 0=false  1=true   2=summoned (only works if model has a summon animation)
-            p.WriteString("NpcWolf");
-            p.WriteString("Title");
+            p.WriteString(npc.Name);
+            p.WriteString(npc.Title);
             p.WriteInt(0x00); // Title color 0=client default
             p.WriteInt(0x00); //pvp flag
             p.WriteInt(0x00); // karma

@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Lineage2.Engine;
 using Lineage2.Model;
 using Lineage2.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -27,8 +28,6 @@ namespace Lineage2.Server
                 .WriteTo.Console()
                 .CreateLogger();
 
-            NpcFactory npcFactory = new NpcFactory();
-            npcFactory.Initialize();
 
             await CreateHostBuilder(args)
                 .Build()
@@ -71,7 +70,7 @@ namespace Lineage2.Server
                     builder.RegisterType<GameServer>();
                     builder.RegisterType<ConnectionHandler>();
                     builder.Register<ServerConfig>(c => c.Resolve<IOptions<ServerConfig>>().Value);
-                    builder.RegisterType<WorldSpawnsTest>().SingleInstance().AutoActivate();
+                    builder.RegisterType<WorldLauncher>().SingleInstance().AutoActivate();
                 })
                 .UseSerilog(Log.Logger, false)
                 .UseConsoleLifetime();

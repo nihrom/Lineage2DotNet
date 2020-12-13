@@ -1,4 +1,5 @@
-﻿using Lineage2.Network;
+﻿using Lineage2.Engine;
+using Lineage2.Network;
 using Lineage2.Network.ServerPackets.OutWrites;
 using Serilog;
 using System;
@@ -66,16 +67,18 @@ namespace Lineage2.Server
         {
             var packetSend = packetBuilder.UserInfo();
             await gameClient.SendAsync(packetSend);
-            int counter = 0;
-            foreach (var spawn in WorldSpawnsTest.Spawns.Where(s => s.LocX < -56693 + 1000 && s.LocX > -56693 -1000 && s.LocY < -113610 + 1000 && s.LocY > -113610 - 1000))
+            int sendNpcInfoCounter = 0;
+            foreach (var npc in WorldLauncher.L2Npcs.Where(s => s.X < -56693 + 1000 && s.X > -56693 -1000 && s.Y < -113610 + 1000 && s.Y > -113610 - 1000))
             {
-                counter++;
-                var packetSend2 = packetBuilder.NpcInfo(counter, spawn.LocX, spawn.LocY, spawn.LocZ);
+                sendNpcInfoCounter++;
+                var packetSend2 = packetBuilder.NpcInfo(npc);
                 await gameClient.SendAsync(packetSend2);
                 await Task.Delay(100);
-                if (counter >= 50)
+                if (sendNpcInfoCounter >= 50)
                     break;
             }
+
+            logger.Information("Отправлено {0} NpcInfo", sendNpcInfoCounter);
         }
 
         public async Task ExSendManorList(Packet packet)

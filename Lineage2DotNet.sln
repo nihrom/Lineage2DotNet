@@ -18,7 +18,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lineage2.LoginService", "Li
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lineage2.Repositories", "Lineage2.Repositories\Lineage2.Repositories.csproj", "{13F5C1FF-A308-42F8-97D5-795C67E23223}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lineage2.Engine", "Lineage2.Engine\Lineage2.Engine.csproj", "{D89E60A6-E47F-4370-9236-7039869F686D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lineage2.Engine", "Lineage2.Engine\Lineage2.Engine.csproj", "{D89E60A6-E47F-4370-9236-7039869F686D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9370E4D2-635A-400B-BA4F-E915CBD77E3A} = {9370E4D2-635A-400B-BA4F-E915CBD77E3A}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

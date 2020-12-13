@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Lineage2.Engine\Lineage2.Engine.csproj" />
     <ProjectReference Include="..\Lineage2.Model\Lineage2.Model.csproj" />
     <ProjectReference Include="..\Lineage2.Network\Lineage2.Network.csproj" />
     <ProjectReference Include="..\Lineage2.Repositories\Lineage2.Repositories.csproj" />

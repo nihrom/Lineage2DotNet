@@ -9,6 +9,8 @@ namespace Lineage2.Model.Templates
         public int NpcId { get; set; }
         public int TemplateId { get; set; }
         public byte Level { get; set; }
+        public string Name { get; set; }
+        public string Title { get; set; }
         public int Exp { get; set; }
         public int Sp { get; set; }
         public int RHand { get; set; }
