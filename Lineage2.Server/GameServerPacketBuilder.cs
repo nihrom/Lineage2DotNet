@@ -425,9 +425,9 @@ namespace Lineage2.Server
             p.WriteInt(npc.ObjId);
             p.WriteInt(npc.NpcTemplate.NpcId + 1000000);
             p.WriteInt(0);
-            p.WriteInt(npc.X);
-            p.WriteInt(npc.Y);
-            p.WriteInt(npc.Z);
+            p.WriteInt((int)npc.Position.x);
+            p.WriteInt((int)npc.Position.y);
+            p.WriteInt((int)npc.Position.z);
             p.WriteInt(0);
             p.WriteInt(0x00);
 

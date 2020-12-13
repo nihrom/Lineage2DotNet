@@ -68,7 +68,7 @@ namespace Lineage2.Server
             var packetSend = packetBuilder.UserInfo();
             await gameClient.SendAsync(packetSend);
             int sendNpcInfoCounter = 0;
-            foreach (var npc in WorldLauncher.L2Npcs.Where(s => s.X < -56693 + 1000 && s.X > -56693 -1000 && s.Y < -113610 + 1000 && s.Y > -113610 - 1000))
+            foreach (var npc in WorldLauncher.L2Npcs.Where(s => s.Position.x < -56693 + 1000 && s.Position.x > -56693 -1000 && s.Position.y < -113610 + 1000 && s.Position.y > -113610 - 1000))
             {
                 sendNpcInfoCounter++;
                 var packetSend2 = packetBuilder.NpcInfo(npc);

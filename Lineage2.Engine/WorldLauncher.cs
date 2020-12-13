@@ -39,9 +39,7 @@ namespace Lineage2.Engine
                     {
                         ObjId = GetNextId(),
                         NpcTemplate = template,
-                        X = spawn.LocX,
-                        Y = spawn.LocY,
-                        Z = spawn.LocZ
+                        Position = new Vector3(spawn.LocX, spawn.LocY, spawn.LocZ)
                     };
 
                     L2Npcs.Add(npc);
