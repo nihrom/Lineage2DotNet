@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,51 +20,18 @@ namespace Lineage2.Model
 
         public Dictionary<int, NpcTemplate> Initialize()
         {
-            XmlDocument doc = new XmlDocument();
+
             string path = Directory.GetCurrentDirectory() + @"\" + @"data\xml\npcs\";
             string[] xmlFilesArray = Directory.GetFiles(path);
-            var npcTemplates = new Dictionary<int, NpcTemplate>();
+            var npcTemplates = new ConcurrentBag<NpcTemplate>();
 
             try
             {
-                foreach (string i in xmlFilesArray)
+                Parallel.ForEach(xmlFilesArray, path =>
                 {
-                    doc.Load(i);
-
-                    XmlNodeList nodes = doc.DocumentElement?.SelectNodes("/list/npc");
-
-                    if (nodes == null)
-                        continue;
-
-                    //ConcurrentBag<string> resultCollection = new ConcurrentBag<string>();
-                    //ParallelLoopResult result = Parallel.ForEach(nodes, node =>
-                    //{
-                    //    resultCollection.Add(AddB(word));
-                    //});
-
-                    foreach (XmlNode node in nodes)
-                    {
-                        XmlElement ownerElement = node.Attributes?[0].OwnerElement;
-                        if ((ownerElement != null) && (node.Attributes != null) && "npc".Equals(ownerElement.Name))
-                        {
-                            NpcTemplate npc = new NpcTemplate();
-
-                            XmlNamedNodeMap attrs = node.Attributes;
-
-                            npc.NpcId = int.Parse(attrs.GetNamedItem("id").Value);
-                            npc.TemplateId = attrs.GetNamedItem("idTemplate") == null ? npc.NpcId : int.Parse(attrs.GetNamedItem("idTemplate").Value);
-                            npc.Name = attrs.GetNamedItem("name").Value;
-                            npc.Title = attrs.GetNamedItem("title").Value;
-
-                            foreach (XmlNode innerData in node.ChildNodes)
-                            {
-                                WriteTemplateFromNode(innerData, npc);
-                            }
-
-                            npcTemplates.Add(npc.NpcId, npc);
-                        }
-                    }
-                }
+                    var result = LoadTemplateFromFile(path);
+                    result.ForEach(r => npcTemplates.Add(r));
+                });
 
                 logger.Information($"Load {npcTemplates.Count} npcTemplates");
             }
@@ -72,7 +40,7 @@ namespace Lineage2.Model
                 logger.Error(e, $"Не удалось распарсить NPC templates  - {e.Message}");
             }
 
-            return npcTemplates;
+            return npcTemplates.ToDictionary(template => template.NpcId, template => template);
         }
 
         public double GetDouble(XmlNode node)
@@ -169,6 +137,50 @@ namespace Lineage2.Model
 
             //    set.Set("drops", drops);
             //}
+        }
+
+        public List<NpcTemplate> LoadTemplateFromFile(string path)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(path);
+
+            XmlNodeList nodes = doc.DocumentElement?.SelectNodes("/list/npc");
+
+            if (nodes == null)
+                return null;
+
+            var localNpcTemplates = new List<NpcTemplate>();
+
+            //ConcurrentBag<string> resultCollection = new ConcurrentBag<string>();
+            //ParallelLoopResult result = Parallel.ForEach(nodes, node =>
+            //{
+            //    resultCollection.Add(AddB(word));
+            //});
+
+            foreach (XmlNode node in nodes)
+            {
+                XmlElement ownerElement = node.Attributes?[0].OwnerElement;
+                if ((ownerElement != null) && (node.Attributes != null) && "npc".Equals(ownerElement.Name))
+                {
+                    NpcTemplate npc = new NpcTemplate();
+
+                    XmlNamedNodeMap attrs = node.Attributes;
+
+                    npc.NpcId = int.Parse(attrs.GetNamedItem("id").Value);
+                    npc.TemplateId = attrs.GetNamedItem("idTemplate") == null ? npc.NpcId : int.Parse(attrs.GetNamedItem("idTemplate").Value);
+                    npc.Name = attrs.GetNamedItem("name").Value;
+                    npc.Title = attrs.GetNamedItem("title").Value;
+
+                    foreach (XmlNode innerData in node.ChildNodes)
+                    {
+                        WriteTemplateFromNode(innerData, npc);
+                    }
+
+                    localNpcTemplates.Add(npc);
+                }
+            }
+
+            return localNpcTemplates;
         }
     }
 }
