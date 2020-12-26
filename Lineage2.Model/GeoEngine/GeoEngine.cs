@@ -5,6 +5,7 @@ using Lineage2.Model.Locations;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Lineage2.Model.GeoEngine
@@ -15,7 +16,7 @@ namespace Lineage2.Model.GeoEngine
 
         private static string GEO_BUG = "%d;%d;%d;%d;%d;%d;%d;%s\r\n";
 
-        private ABlock[][] _blocks;
+        private ABlock[,] _blocks;
         private BlockNull _nullBlock;
 
         //private Set<ItemInstance> _debugItems = ConcurrentHashMap.newKeySet();
@@ -39,7 +40,7 @@ namespace Lineage2.Model.GeoEngine
         {
             this.geodataConfig = geodataConfig;
             // initialize block container
-            _blocks = new ABlock[GeoStructure.GeoBlocksX][GeoStructure.GeoBlocksY];
+            _blocks = new ABlock[GeoStructure.GeoBlocksX, GeoStructure.GeoBlocksY];
 
             // load null block
             _nullBlock = new BlockNull();
@@ -200,7 +201,7 @@ namespace Lineage2.Model.GeoEngine
         private bool loadGeoBlocks(int regionX, int regionY)
         {
             string filename = string.Format(GeoFormat.L2D.GetFilename(), regionX, regionY);
-            string filepath = Config.GEODATA_PATH + filename;
+            string filepath = geodataConfig.GeoDataPath + filename;
 
             // standard load
             try (RandomAccessFile raf = new RandomAccessFile(filepath, "r");
@@ -211,8 +212,8 @@ namespace Lineage2.Model.GeoEngine
                 buffer.order(ByteOrder.LITTLE_ENDIAN);
 
                 // Get block indexes
-                int blockX = (regionX - World.TILE_X_MIN) * GeoStructure.RegionBlocksX;
-                int blockY = (regionY - World.TILE_Y_MIN) * GeoStructure.RegionBlocksY;
+                int blockX = (regionX - GeoStructure.TileXMin) * GeoStructure.RegionBlocksX;
+                int blockY = (regionY - GeoStructure.TileYMin) * GeoStructure.RegionBlocksY;
 
                 // loop over region blocks
                 for (int ix = 0; ix < GeoStructure.RegionBlocksX; ix++)
@@ -278,7 +279,7 @@ namespace Lineage2.Model.GeoEngine
             // load all null blocks
             for (int ix = 0; ix < GeoStructure.RegionBlocksX; ix++)
                 for (int iy = 0; iy < GeoStructure.RegionBlocksY; iy++)
-                    _blocks[blockX + ix][blockY + iy] = _nullBlock;
+                    _blocks[blockX + ix, blockY + iy] = _nullBlock;
         }
 
         /**
@@ -316,7 +317,7 @@ namespace Lineage2.Model.GeoEngine
          */
         public static int GetGeoX(int worldX)
         {
-            return (MathUtil.limit(worldX, World.WORLD_X_MIN, World.WORLD_X_MAX) - World.WORLD_X_MIN) >> 4;
+            return (Math.Clamp(worldX, GeoStructure.WorldXMin, GeoStructure.WorldXMax) - GeoStructure.WorldXMin) >> 4;
         }
 
         /**
@@ -326,7 +327,7 @@ namespace Lineage2.Model.GeoEngine
          */
         public static int GetGeoY(int worldY)
         {
-            return (MathUtil.limit(worldY, World.WORLD_Y_MIN, World.WORLD_Y_MAX) - World.WORLD_Y_MIN) >> 4;
+            return (Math.Clamp(worldY, GeoStructure.WorldYMin, GeoStructure.WorldYMax) - GeoStructure.WorldYMin) >> 4;
         }
 
         /**
@@ -336,7 +337,7 @@ namespace Lineage2.Model.GeoEngine
          */
         public static int GetWorldX(int geoX)
         {
-            return (MathUtil.limit(geoX, 0, GeoStructure.GeoCellsX) << 4) + World.WORLD_X_MIN + 8;
+            return (Math.Clamp(geoX, 0, GeoStructure.GeoCellsX) << 4) + GeoStructure.WorldXMin + 8;
         }
 
         /**
@@ -346,7 +347,7 @@ namespace Lineage2.Model.GeoEngine
          */
         public static int GetWorldY(int geoY)
         {
-            return (MathUtil.limit(geoY, 0, GeoStructure.GeoCellsY) << 4) + World.WORLD_Y_MIN + 8;
+            return (Math.Clamp(geoY, 0, GeoStructure.GeoCellsY) << 4) + GeoStructure.WorldYMin + 8;
         }
 
         /**
@@ -357,7 +358,7 @@ namespace Lineage2.Model.GeoEngine
          */
         public ABlock GetBlock(int geoX, int geoY)
         {
-            return _blocks[geoX / GeoStructure.BlockCellsX][geoY / GeoStructure.BlockCellsY];
+            return _blocks[geoX / GeoStructure.BlockCellsX, geoY / GeoStructure.BlockCellsY];
         }
 
         /**
@@ -486,9 +487,9 @@ namespace Lineage2.Model.GeoEngine
          * Add {@link IGeoObject} to the geodata.
          * @param object : An object using {@link IGeoObject} interface.
          */
-        public void addGeoObject(IGeoObject object)
+        public void addGeoObject(IGeoObject geoObject)
         {
-            toggleGeoObject(object, true);
+            toggleGeoObject(geoObject, true);
         }
 
         /**
@@ -684,8 +685,8 @@ namespace Lineage2.Model.GeoEngine
         protected bool checkSee(int gox, int goy, int goz, double oheight, int gtx, int gty, int gtz, double theight)
         {
             // Get line of sight Z coordinates
-            double losoz = goz + oheight * Config.PART_OF_CHARACTER_HEIGHT / 100;
-            double lostz = gtz + theight * Config.PART_OF_CHARACTER_HEIGHT / 100;
+            double losoz = goz + oheight * geodataConfig.PartOfCharacterHeight / 100;
+            double lostz = gtz + theight * geodataConfig.PartOfCharacterHeight / 100;
 
             // Get X delta and signum
             int dx = Math.Abs(gtx - gox);
@@ -790,7 +791,7 @@ namespace Lineage2.Model.GeoEngine
                     losoz += dz;
 
                     // perform line of sight check, return when fails
-                    if ((goz - losoz) > Config.MAX_OBSTACLE_HEIGHT)
+                    if ((goz - losoz) > geodataConfig.MaxObstacleHeight)
                         return false;
 
                     // Get layer nswe
@@ -815,7 +816,7 @@ namespace Lineage2.Model.GeoEngine
                     lostz -= dz;
 
                     // perform line of sight check, return when fails
-                    if ((gtz - lostz) > Config.MAX_OBSTACLE_HEIGHT)
+                    if ((gtz - lostz) > geodataConfig.MaxObstacleHeight)
                         return false;
 
                     // Get layer nswe
@@ -830,7 +831,7 @@ namespace Lineage2.Model.GeoEngine
             }
 
             // when iteration is completed, compare  Z coordinates
-            return Math.abs(goz - gtz) < GeoStructure.CellHeight * 4;
+            return Math.Abs(goz - gtz) < GeoStructure.CellHeight * 4;
         }
 
         /**
@@ -850,8 +851,8 @@ namespace Lineage2.Model.GeoEngine
         protected bool checkSeeOriginal(int gox, int goy, int goz, double oheight, int gtx, int gty, int gtz, double theight)
         {
             // Get line of sight Z coordinates
-            double losoz = goz + oheight * Config.PART_OF_CHARACTER_HEIGHT / 100;
-            double lostz = gtz + theight * Config.PART_OF_CHARACTER_HEIGHT / 100;
+            double losoz = goz + oheight * geodataConfig.PartOfCharacterHeight / 100;
+            double lostz = gtz + theight * geodataConfig.PartOfCharacterHeight / 100;
 
             // Get X delta and signum
             int dx = Math.Abs(gtx - gox);
@@ -956,7 +957,7 @@ namespace Lineage2.Model.GeoEngine
                     losoz += dz;
 
                     // perform line of sight check, return when fails
-                    if ((goz - losoz) > Config.MAX_OBSTACLE_HEIGHT)
+                    if ((goz - losoz) > geodataConfig.MaxObstacleHeight)
                         return false;
 
                     // Get layer nswe
@@ -981,7 +982,7 @@ namespace Lineage2.Model.GeoEngine
                     lostz -= dz;
 
                     // perform line of sight check, return when fails
-                    if ((gtz - lostz) > Config.MAX_OBSTACLE_HEIGHT)
+                    if ((gtz - lostz) > geodataConfig.MaxObstacleHeight)
                         return false;
 
                     // Get layer nswe
@@ -996,7 +997,7 @@ namespace Lineage2.Model.GeoEngine
             }
 
             // when iteration is completed, compare  Z coordinates
-            return Math.abs(goz - gtz) < GeoStructure.CellHeight * 4;
+            return Math.Abs(goz - gtz) < GeoStructure.CellHeight * 4;
         }
 
         /**
@@ -1235,7 +1236,7 @@ namespace Lineage2.Model.GeoEngine
                 return null;
 
             // clean debug path
-            bool debug = playable && Config.DEBUG_PATH;
+            bool debug = playable && geodataConfig.DebugPath;
             if (debug)
                 clearDebugItems();
 
@@ -1287,7 +1288,8 @@ namespace Lineage2.Model.GeoEngine
                 return path;
 
             // log data
-            long timeStamp = System.CurrentTimeMillis();
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
             _postFilterUses++;
             if (playable)
                 _postFilterPlayableUses++;
@@ -1339,12 +1341,13 @@ namespace Lineage2.Model.GeoEngine
             // show  path
             if (debug)
             {
-                for (Location node : path)
+                foreach (Location node in path)
                     dropDebugItem(65, 0, node); // red potion
             }
 
             // log data
-            _postFilterElapsed += System.currentTimeMillis() - timeStamp;
+            stopWatch.Stop();
+            _postFilterElapsed += stopWatch.ElapsedMilliseconds;
 
             return path;
         }
@@ -1383,10 +1386,10 @@ namespace Lineage2.Model.GeoEngine
             int gox = GetGeoX(loc.GetX());
             int goy = GetGeoY(loc.GetY());
             int goz = loc.GetZ();
-            int rx = gox / GeoStructure.RegionCellsX + World.TILE_X_MIN;
-            int ry = goy / GeoStructure.RegionCellsY + World.TILE_Y_MIN;
-            int bx = (gox / GeoStructure.BlockCellsX) % GeoStructure.REGION_BLOCKS_X;
-            int by = (goy / GeoStructure.BlockCellsY) % GeoStructure.REGION_BLOCKS_Y;
+            int rx = gox / GeoStructure.RegionCellsX + GeoStructure.TileXMin;
+            int ry = goy / GeoStructure.RegionCellsY + GeoStructure.TileYMin;
+            int bx = (gox / GeoStructure.BlockCellsX) % GeoStructure.RegionBlocksX;
+            int by = (goy / GeoStructure.BlockCellsY) % GeoStructure.RegionBlocksY;
             int cx = gox % GeoStructure.BlockCellsX;
             int cy = goy % GeoStructure.BlockCellsY;
 
