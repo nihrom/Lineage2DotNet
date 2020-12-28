@@ -25,7 +25,6 @@ namespace Lineage2.Model
             z = 0f;
         }
 
-
         /// <summary>
         /// Vector3 в том же направлении, но с величиной 1
         /// </summary>
@@ -80,26 +79,32 @@ namespace Lineage2.Model
         /// vector3 with all values set to 1
         /// </summary>
         public readonly static Vector3 one = new Vector3(1f, 1f, 1f);
+
         /// <summary>
         /// vector3 with z set to 1
         /// </summary>
         public static Vector3 forward { get { return new Vector3(0f, 0f, 1f); } }
+
         /// <summary>
         /// 
         /// </summary>
         public static Vector3 back { get { return new Vector3(0f, 0f, -1f); } }
+
         /// <summary>
         /// 
         /// </summary>
         public static Vector3 up { get { return new Vector3(0f, 1f, 0f); } }
+
         /// <summary>
         /// 
         /// </summary>
         public static Vector3 down { get { return new Vector3(0f, -1f, 0f); } }
+
         /// <summary>
         /// 
         /// </summary>
         public static Vector3 left { get { return new Vector3(-1f, 0f, 0f); } }
+
         /// <summary>
         /// 
         /// </summary>
@@ -436,8 +441,7 @@ namespace Lineage2.Model
         /// <param name="maxRadiansDelta"></param>
         /// <param name="maxMagnitudeDelta"></param>
         /// <returns></returns>
-        public static Vector3 RotateTowards(Vector3 current, Vector3 target, float maxRadiansDelta,
-                                            float maxMagnitudeDelta)
+        public static Vector3 RotateTowards(Vector3 current, Vector3 target, float maxRadiansDelta, float maxMagnitudeDelta)
         {
             throw new NotImplementedException();
         }
