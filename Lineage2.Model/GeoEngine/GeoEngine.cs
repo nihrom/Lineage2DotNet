@@ -13,13 +13,12 @@ namespace Lineage2.Model.GeoEngine
     public class GeoEngine
     {
         private readonly ILogger logger = Log.Logger.ForContext<GeoEngine>();
-        private static GeoEngine _instance;
         private GeodataConfig geodataConfig;
         private static byte _e = 1;
         private static byte _w = 2;
         private static byte _s = 4;
         private static byte _n = 8;
-        private static Dictionary<short, MemoryMappedViewStream> _geodata = new Dictionary<short, MemoryMappedViewStream>();
+        private static Dictionary<short, MemoryMappedViewAccessor> _geodata = new Dictionary<short, MemoryMappedViewAccessor>();
         private static Dictionary<short, int[]> _geodataIndex = new Dictionary<short, int[]>();
         //private static Dictionary<short, FileChannel> Geodata_files = new Dictionary<short, FileChannel>();
 
@@ -223,122 +222,122 @@ namespace Lineage2.Model.GeoEngine
             nInitGeodata();
         }
 
-        //public Location moveCheck(int x, int y, int z, int tx, int ty, int tz)
-        //{
-        //    Location startpoint = new Location(x, y, z);
+        public Location moveCheck(int x, int y, int z, int tx, int ty, int tz)
+        {
+            Location startpoint = new Location(x, y, z);
 
-        //    //if (DoorTable.getInstance().checkIfDoorsBetween(x, y, z, tx, ty, tz))
-        //    //    return startpoint;
+            //if (DoorTable.getInstance().checkIfDoorsBetween(x, y, z, tx, ty, tz))
+            //    return startpoint;
 
-        //    Location destiny = new Location(tx, ty, tz);
-        //    return moveCheck(startpoint, destiny, (x - GeoStructure.WorldXMin) >> 4, (y - GeoStructure.WorldYMin) >> 4, z, (tx - GeoStructure.WorldXMin) >> 4, (ty - GeoStructure.WorldYMin) >> 4, tz);
-        //}
+            Location destiny = new Location(tx, ty, tz);
+            return moveCheck(startpoint, destiny, (x - GeoStructure.WorldXMin) >> 4, (y - GeoStructure.WorldYMin) >> 4, z, (tx - GeoStructure.WorldXMin) >> 4, (ty - GeoStructure.WorldYMin) >> 4, tz);
+        }
 
-        //private static Location moveCheck(Location startpoint, Location destiny, int x, int y, double z, int tx, int ty, int tz)
-        //{
-        //    int dx = (tx - x);
-        //    int dy = (ty - y);
-        //    int distance2 = dx * dx + dy * dy;
+        private Location moveCheck(Location startpoint, Location destiny, int x, int y, double z, int tx, int ty, int tz)
+        {
+            int dx = (tx - x);
+            int dy = (ty - y);
+            int distance2 = dx * dx + dy * dy;
 
-        //    if (distance2 == 0)
-        //        return destiny;
-        //    if (distance2 > 36100) // 190*190*16 = 3040 world coord
-        //    {
-        //        // Avoid too long check
-        //        // Currently we calculate a middle point
-        //        // for wyvern users and otherwise for comfort
-        //        double divider = Math.Sqrt((double)30000 / distance2);
-        //        tx = x + (int)(divider * dx);
-        //        ty = y + (int)(divider * dy);
-        //        int dz = (tz - startpoint.getZ());
-        //        tz = startpoint.getZ() + (int)(divider * dz);
-        //        dx = (tx - x);
-        //        dy = (ty - y);
-        //        //return startpoint;
-        //    }
+            if (distance2 == 0)
+                return destiny;
+            if (distance2 > 36100) // 190*190*16 = 3040 world coord
+            {
+                // Avoid too long check
+                // Currently we calculate a middle point
+                // for wyvern users and otherwise for comfort
+                double divider = Math.Sqrt((double)30000 / distance2);
+                tx = x + (int)(divider * dx);
+                ty = y + (int)(divider * dy);
+                int dz = (tz - startpoint.getZ());
+                tz = startpoint.getZ() + (int)(divider * dz);
+                dx = (tx - x);
+                dy = (ty - y);
+                //return startpoint;
+            }
 
-        //    // Increment in Z coordinate when moving along X or Y axis 
-        //    // and not straight to the target. This is done because
-        //    // calculation moves either in X or Y direction.
-        //    int inc_x = sign(dx);
-        //    int inc_y = sign(dy);
-        //    dx = Math.Abs(dx);
-        //    dy = Math.Abs(dy);
+            // Increment in Z coordinate when moving along X or Y axis 
+            // and not straight to the target. This is done because
+            // calculation moves either in X or Y direction.
+            int inc_x = sign(dx);
+            int inc_y = sign(dy);
+            dx = Math.Abs(dx);
+            dy = Math.Abs(dy);
 
-        //    // next_* are used in NcanMoveNext check from x,y
-        //    int next_x = x;
-        //    int next_y = y;
-        //    double tempz = z;
+            // next_* are used in NcanMoveNext check from x,y
+            int next_x = x;
+            int next_y = y;
+            double tempz = z;
 
-        //    // creates path to the target, using only x or y direction
-        //    // calculation stops when next_* == target
-        //    if (dx >= dy)// dy/dx <= 1
-        //    {
-        //        int delta_A = 2 * dy;
-        //        int d = delta_A - dx;
-        //        int delta_B = delta_A - 2 * dx;
+            // creates path to the target, using only x or y direction
+            // calculation stops when next_* == target
+            if (dx >= dy)// dy/dx <= 1
+            {
+                int delta_A = 2 * dy;
+                int d = delta_A - dx;
+                int delta_B = delta_A - 2 * dx;
 
-        //        for (int i = 0; i < dx; i++)
-        //        {
-        //            x = next_x;
-        //            y = next_y;
-        //            if (d > 0)
-        //            {
-        //                d += delta_B;
-        //                next_x += inc_x;
-        //                next_y += inc_y;
-        //                //_log.warn("2: next_x:"+next_x+" next_y"+next_y);
-        //                tempz = nCanMoveNext(x, y, (int)z, next_x, next_y, tz);
-        //                if (tempz == double.MinValue)
-        //                    return new Location((x << 4) + GeoStructure.WorldXMin, (y << 4) + GeoStructure.WorldYMin, (int)z);
-        //                z = tempz;
-        //            }
-        //            else
-        //            {
-        //                d += delta_A;
-        //                next_x += inc_x;
-        //                //_log.warn("3: next_x:"+next_x+" next_y"+next_y);
-        //                tempz = nCanMoveNext(x, y, (int)z, next_x, next_y, tz);
-        //                if (tempz == double.MinValue)
-        //                    return new Location((x << 4) + GeoStructure.WorldXMin, (y << 4) + GeoStructure.WorldYMin, (int)z);
-        //                z = tempz;
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        int delta_A = 2 * dx;
-        //        int d = delta_A - dy;
-        //        int delta_B = delta_A - 2 * dy;
-        //        for (int i = 0; i < dy; i++)
-        //        {
-        //            x = next_x;
-        //            y = next_y;
-        //            if (d > 0)
-        //            {
-        //                d += delta_B;
-        //                next_y += inc_y;
-        //                next_x += inc_x;
-        //                //_log.warn("5: next_x:"+next_x+" next_y"+next_y);
-        //                tempz = nCanMoveNext(x, y, (int)z, next_x, next_y, tz);
-        //                if (tempz == double.MinValue)
-        //                    return new Location((x << 4) + GeoStructure.WorldXMin, (y << 4) + GeoStructure.WorldYMin, (int)z);
-        //                z = tempz;
-        //            }
-        //            else
-        //            {
-        //                d += delta_A;
-        //                next_y += inc_y;
-        //                //_log.warn("6: next_x:"+next_x+" next_y"+next_y);
-        //                tempz = nCanMoveNext(x, y, (int)z, next_x, next_y, tz);
-        //                if (tempz == double.MinValue)
-        //                    return new Location((x << 4) + GeoStructure.WorldXMin, (y << 4) + GeoStructure.WorldYMin, (int)z);
-        //                z = tempz;
-        //            }
-        //        }
-        //    }
-        //    return destiny; // should actually return correct z here instead of tz
-        //}
+                for (int i = 0; i < dx; i++)
+                {
+                    x = next_x;
+                    y = next_y;
+                    if (d > 0)
+                    {
+                        d += delta_B;
+                        next_x += inc_x;
+                        next_y += inc_y;
+                        //_log.warn("2: next_x:"+next_x+" next_y"+next_y);
+                        tempz = nCanMoveNext(x, y, (int)z, next_x, next_y, tz);
+                        if (tempz == double.MinValue)
+                            return new Location((x << 4) + GeoStructure.WorldXMin, (y << 4) + GeoStructure.WorldYMin, (int)z);
+                        z = tempz;
+                    }
+                    else
+                    {
+                        d += delta_A;
+                        next_x += inc_x;
+                        //_log.warn("3: next_x:"+next_x+" next_y"+next_y);
+                        tempz = nCanMoveNext(x, y, (int)z, next_x, next_y, tz);
+                        if (tempz == double.MinValue)
+                            return new Location((x << 4) + GeoStructure.WorldXMin, (y << 4) + GeoStructure.WorldYMin, (int)z);
+                        z = tempz;
+                    }
+                }
+            }
+            else
+            {
+                int delta_A = 2 * dx;
+                int d = delta_A - dy;
+                int delta_B = delta_A - 2 * dy;
+                for (int i = 0; i < dy; i++)
+                {
+                    x = next_x;
+                    y = next_y;
+                    if (d > 0)
+                    {
+                        d += delta_B;
+                        next_y += inc_y;
+                        next_x += inc_x;
+                        //_log.warn("5: next_x:"+next_x+" next_y"+next_y);
+                        tempz = nCanMoveNext(x, y, (int)z, next_x, next_y, tz);
+                        if (tempz == double.MinValue)
+                            return new Location((x << 4) + GeoStructure.WorldXMin, (y << 4) + GeoStructure.WorldYMin, (int)z);
+                        z = tempz;
+                    }
+                    else
+                    {
+                        d += delta_A;
+                        next_y += inc_y;
+                        //_log.warn("6: next_x:"+next_x+" next_y"+next_y);
+                        tempz = nCanMoveNext(x, y, (int)z, next_x, next_y, tz);
+                        if (tempz == double.MinValue)
+                            return new Location((x << 4) + GeoStructure.WorldXMin, (y << 4) + GeoStructure.WorldYMin, (int)z);
+                        z = tempz;
+                    }
+                }
+            }
+            return destiny; // should actually return correct z here instead of tz
+        }
 
         /**
         * @param x
@@ -349,96 +348,96 @@ namespace Lineage2.Model.GeoEngine
         * @param tz
         * @return True if char can move to (tx,ty,tz)
         */
-        //private double nCanMoveNext(int x, int y, int z, int tx, int ty, int tz)
-        //{
-        //    short region = getRegionOffset(x, y);
-        //    int blockX = getBlock(x);
-        //    int blockY = getBlock(y);
-        //    int cellX, cellY;
-        //    short NSWE = 0;
+        private double nCanMoveNext(int x, int y, int z, int tx, int ty, int tz)
+        {
+            short region = getRegionOffset(x, y);
+            int blockX = getBlock(x);
+            int blockY = getBlock(y);
+            int cellX, cellY;
+            short NSWE = 0;
 
-        //    int index = 0;
+            int index = 0;
 
-        //    if (_geodataIndex.TryGetValue(region, out int[] data))
-        //    {
-        //        //Get Index for current block of current region geodata
-        //        index = data[(blockX << 8) + (blockY)];
-        //    }
-        //    else
-        //    {
-        //        //Geodata without index - it is just empty so index can be calculated on the fly
-        //        index = ((blockX << 8) + blockY) * 3;
-        //    }
+            if (_geodataIndex.TryGetValue(region, out int[] data))
+            {
+                //Get Index for current block of current region geodata
+                index = data[(blockX << 8) + (blockY)];
+            }
+            else
+            {
+                //Geodata without index - it is just empty so index can be calculated on the fly
+                index = ((blockX << 8) + blockY) * 3;
+            }
 
-        //    //Buffer that Contains current Region GeoData
-        //    MemoryMappedViewStream geo = _geodata[region];
+            //Buffer that Contains current Region GeoData
+            MemoryMappedViewAccessor geo = _geodata[region];
 
-        //    if (geo == null)
-        //    {
-        //        logger.Warning("Geo Region - Region Offset: " + region + " dosnt exist!!");
-        //        return z;
-        //    }
-        //    //Read current block type: 0-flat,1-complex,2-multilevel
-        //    byte type = geo.get(index);
-        //    index++;
-        //    if (type == 0) //flat
-        //        return z;
-        //    else if (type == 1) //complex
-        //    {
-        //        cellX = getCell(x);
-        //        cellY = getCell(y);
-        //        index += ((cellX << 3) + cellY) << 1;
-        //        short height = geo.getshort(index);
-        //        NSWE = (short)(height & 0x0F);
-        //        height = (short)(height & 0x0fff0);
-        //        height = (short)(height >> 1); //height / 2
-        //        if (checkNSWE(NSWE, x, y, tx, ty))
-        //            return height;
-        //        return double.MinValue;
-        //    }
-        //    else //multilevel, type == 2
-        //    {
-        //        cellX = getCell(x);
-        //        cellY = getCell(y);
-        //        int offset = (cellX << 3) + cellY;
-        //        while (offset > 0) // iterates (too many times?) to get to layer count
-        //        {
-        //            byte lc = geo.get(index);
-        //            index += (lc << 1) + 1;
-        //            offset--;
-        //        }
-        //        byte layers = geo.get(index);
-        //        //_log.warn("layers"+layers);
-        //        index++;
-        //        short height = -1;
-        //        if (layers <= 0 || layers > 125)
-        //        {
-        //            logger.Warning("Broken geofile (case3), region: " + region + " - invalid layer count: " + layers + " at: " + x + " " + y);
-        //            return z;
-        //        }
-        //        short tempz = short.MinValue;
-        //        while (layers > 0)
-        //        {
-        //            height = geo.getshort(index);
-        //            height = (short)(height & 0x0fff0);
-        //            height = (short)(height >> 1); //height / 2
+            if (geo == null)
+            {
+                logger.Warning("Geo Region - Region Offset: " + region + " dosnt exist!!");
+                return z;
+            }
+            //Read current block type: 0-flat,1-complex,2-multilevel
+            byte type = geo.ReadByte(index);
+            index++;
+            if (type == 0) //flat
+                return z;
+            else if (type == 1) //complex
+            {
+                cellX = getCell(x);
+                cellY = getCell(y);
+                index += ((cellX << 3) + cellY) << 1;
+                short height = geo.ReadInt16(index);
+                NSWE = (short)(height & 0x0F);
+                height = (short)(height & 0x0fff0);
+                height = (short)(height >> 1); //height / 2
+                if (checkNSWE(NSWE, x, y, tx, ty))
+                    return height;
+                return double.MinValue;
+            }
+            else //multilevel, type == 2
+            {
+                cellX = getCell(x);
+                cellY = getCell(y);
+                int offset = (cellX << 3) + cellY;
+                while (offset > 0) // iterates (too many times?) to get to layer count
+                {
+                    byte lc = geo.ReadByte(index);
+                    index += (lc << 1) + 1;
+                    offset--;
+                }
+                byte layers = geo.ReadByte(index);
+                //_log.warn("layers"+layers);
+                index++;
+                short height = -1;
+                if (layers <= 0 || layers > 125)
+                {
+                    logger.Warning("Broken geofile (case3), region: " + region + " - invalid layer count: " + layers + " at: " + x + " " + y);
+                    return z;
+                }
+                short tempz = short.MinValue;
+                while (layers > 0)
+                {
+                    height = geo.ReadInt16(index);
+                    height = (short)(height & 0x0fff0);
+                    height = (short)(height >> 1); //height / 2
 
-        //            // searches the closest layer to current z coordinate
-        //            if ((z - tempz) * (z - tempz) > (z - height) * (z - height))
-        //            {
-        //                //layercurr = layers;
-        //                tempz = height;
-        //                NSWE = geo.getshort(index);
-        //                NSWE = (short)(NSWE & 0x0F);
-        //            }
-        //            layers--;
-        //            index += 2;
-        //        }
-        //        if (checkNSWE(NSWE, x, y, tx, ty))
-        //            return tempz;
-        //        return double.MinValue;
-        //    }
-        //}
+                    // searches the closest layer to current z coordinate
+                    if ((z - tempz) * (z - tempz) > (z - height) * (z - height))
+                    {
+                        //layercurr = layers;
+                        tempz = height;
+                        NSWE = geo.ReadInt16(index);
+                        NSWE = (short)(NSWE & 0x0F);
+                    }
+                    layers--;
+                    index += 2;
+                }
+                if (checkNSWE(NSWE, x, y, tx, ty))
+                    return tempz;
+                return double.MinValue;
+            }
+        }
 
         //public short getType(int x, int y)
         //{
@@ -851,68 +850,51 @@ namespace Lineage2.Model.GeoEngine
             string fname = "./data/geodata/" + geoDateFileInfo.PositionX + "_" + geoDateFileInfo.PositionY + ".l2j";
             string path = Path.GetFullPath(fname);
             short regionoffset = (short)((geoDateFileInfo.PositionX << 5) + geoDateFileInfo.PositionY);
-            logger.Information("GeoEngine: Загружен: {@geoDateFileInfo} -> region offset: " + regionoffset, geoDateFileInfo);
+            logger.Information("GeoEngine: Загружается {@geoDateFileInfo}->region offset:" + regionoffset, geoDateFileInfo);
 
+            //TODO:Тут надо бы обернуть в try catch
             using (var mmf = MemoryMappedFile.CreateFromFile(path, FileMode.Open))
             {
                 var accesor = mmf.CreateViewAccessor();
+                logger.Information("Geoengine: Загрузился {@geoDateFileInfo}->Capacity {1}", geoDateFileInfo, accesor.Capacity);
+                _geodata.Add(regionoffset, accesor);
+
+                if (accesor.Capacity <= 196608)
+                    return true;
+
+                int[] intBuffer = new int[65536];
+
+                int block = 0;
+                int index = 0;
+                int flor = 0;
+
+                while (block < 65536)
+                {
+                    byte type = accesor.ReadByte(index);
+                    intBuffer[block] = index;
+                    block++;
+                    index++;
+
+                    if (type == 0)
+                        index += 2;
+                    else if (type == 1)
+                        index += 128;
+                    else
+                    {
+                        for (int b = 0; b < 64; b++)
+                        {
+                            byte layers = accesor.ReadByte(index);
+                            index += (layers << 1) + 1;
+                            if (layers > flor)
+                                flor = layers;
+                        }
+                    }
+                }
+
+                _geodataIndex.Add(regionoffset, intBuffer);
+
+                return true;
             }
-
-            //    File Geo = new File(fname);
-            //int size, index = 0, block = 0, flor = 0;
-            //try
-            //{
-            //    // Create a read-only memory-mapped file
-            //    FileChannel roChannel = new RandomAccessFile(Geo, "r").getChannel();
-            //    size = (int)roChannel.size();
-            //    MappedByteBuffer geo;
-            //    if (Config.FORCE_GEODATA) //Force O/S to Loads this buffer's content into physical memory.
-            //                              //it is not guarantee, because the underlying operating system may have paged out some of the buffer's data
-            //        geo = roChannel.Dictionary(FileChannel.MapMode.READ_ONLY, 0, size).load();
-            //    else
-            //        geo = roChannel.Dictionary(FileChannel.MapMode.READ_ONLY, 0, size);
-            //    geo.order(ByteOrder.LITTLE_ENDIAN);
-
-            //    if (size > 196608)
-            //    {
-            //        // Indexing geo files, so we will know where each block starts
-            //        IntBuffer indexs = IntBuffer.allocate(65536);
-            //        while (block < 65536)
-            //        {
-            //            byte type = geo.get(index);
-            //            indexs.put(block, index);
-            //            block++;
-            //            index++;
-            //            if (type == 0)
-            //                index += 2; // 1x short
-            //            else if (type == 1)
-            //                index += 128; // 64 x short
-            //            else
-            //            {
-            //                int b;
-            //                for (b = 0; b < 64; b++)
-            //                {
-            //                    byte layers = geo.get(index);
-            //                    index += (layers << 1) + 1;
-            //                    if (layers > flor)
-            //                        flor = layers;
-            //                }
-            //            }
-            //        }
-            //        _geodataIndex.put(regionoffset, indexs);
-            //    }
-            //    _geodata.put(regionoffset, geo);
-            //    Geodata_files.put(regionoffset, roChannel);
-
-            //    _log.info("Geo Engine: - Max Layers: " + flor + " Size: " + size + " Loaded: " + index);
-            //}
-            //catch (Exception e)
-            //{
-            //    e.printStackTrace();
-            //    _log.warn("Failed to Load GeoFile at block: " + block + "\n");
-            //    return false;
-            //}
-            return true;
         }
 
         private static short getRegionOffset(int x, int y)
