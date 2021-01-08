@@ -856,7 +856,7 @@ namespace Lineage2.Model.GeoEngine
             using (var mmf = MemoryMappedFile.CreateFromFile(path, FileMode.Open))
             {
                 var accesor = mmf.CreateViewAccessor();
-                logger.Information("Geoengine: Загрузился {@geoDateFileInfo}->Capacity {1}", geoDateFileInfo, accesor.Capacity);
+                logger.Information("GeoEngine: Загрузился {@geoDateFileInfo}->Capacity {1}", geoDateFileInfo, accesor.Capacity);
                 _geodata.Add(regionoffset, accesor);
 
                 if (accesor.Capacity <= 196608)

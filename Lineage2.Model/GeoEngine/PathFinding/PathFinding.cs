@@ -7,27 +7,8 @@ namespace Lineage2.Model.GeoEngine.PathFinding
 {
     public abstract class PathFinding
     {
-        private static PathFinding _instance;
-
-        public static PathFinding getInstance()
-        {
-            //if (_instance == null)
-            //{
-            //	if (true /*Config.GEODATA_PATHFINDING*/)
-            //	{
-            //		//Smaler Memory Usage, Higher Cpu Usage (CalculatedOnTheFly)
-            //		return GeoPathFinding.getInstance();
-            //	}
-            //	else // WORLD_PATHFINDING
-            //	{
-            //		//Higher Memoru Usage, Lower Cpu Usage (PreCalculated)
-            //	}
-            //}
-            return _instance;
-        }
-
         public abstract bool pathNodesExist(short regionoffset);
-        public abstract List<AbstractNodeLoc> findPath(int gx, int gy, short z, int gtx, int gtz, short tz);
+        public abstract LinkedList<AbstractNodeLoc> findPath(int gx, int gy, short z, int gtx, int gtz, short tz);
         public abstract Node[] readNeighbors(short node_x, short node_y, int idx);
 
         public LinkedList<AbstractNodeLoc> search(Node start, Node end)

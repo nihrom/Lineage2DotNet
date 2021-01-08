@@ -1,4 +1,5 @@
 ﻿using Lineage2.Engine;
+using Lineage2.Model;
 using Lineage2.Network;
 using Lineage2.Network.ServerPackets.OutWrites;
 using Serilog;
@@ -73,12 +74,31 @@ namespace Lineage2.Server
                 sendNpcInfoCounter++;
                 var packetSend2 = packetBuilder.NpcInfo(npc);
                 await gameClient.SendAsync(packetSend2);
-                await Task.Delay(100);
                 if (sendNpcInfoCounter >= 50)
                     break;
             }
 
             logger.Information("Отправлено {0} NpcInfo", sendNpcInfoCounter);
+        }
+
+        public async Task MoveBackwardToLocation(Packet packet)
+        {
+            int _targetX = packet.ReadInt();
+            int _targetY = packet.ReadInt();
+            int _targetZ = packet.ReadInt();
+            int _originX = packet.ReadInt();
+            int _originY = packet.ReadInt();
+            int _originZ = packet.ReadInt();
+            int _moveMovement = packet.ReadInt();
+
+            Vector3 current = new Vector3(_originX, _originY, _originZ);
+            Vector3 destination = new Vector3(_targetX, _targetY, _targetZ);
+
+            logger.Information($"CurrentPostition {"x:" + current.x + ", y:" + current.y + ", z:" + current.z}, destinationPosition {"x:" + destination.x + ", y:" + destination.y + ", z:" + destination.z}");
+
+            var sendPacket = packetBuilder.CharMoveToLocation(current, destination);
+
+            await gameClient.SendAsync(sendPacket);
         }
 
         public async Task ExSendManorList(Packet packet)

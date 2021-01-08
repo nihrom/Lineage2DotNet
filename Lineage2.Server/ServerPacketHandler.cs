@@ -22,6 +22,7 @@ namespace Lineage2.Server
             ClientPackets.TryAdd(0x08, mainController.AuthLogin);
             ClientPackets.TryAdd(0x0d, mainController.CharacterSelected);
             ClientPackets.TryAdd(0x03, mainController.EnterWorld);
+            ClientPackets.TryAdd(0x01, mainController.MoveBackwardToLocation);
 
             ClientPacketsD0.TryAdd(0x08, mainController.ExSendManorList);
         }
@@ -39,7 +40,7 @@ namespace Lineage2.Server
                 }
                 else
                 {
-                    logger.Information($"Для пакета Opcode:{packet.FirstOpcode:X2} нет обработчика");
+                    logger.Error($"Для пакета Opcode:{packet.FirstOpcode:X2} нет обработчика");
                 }
             }
             else
@@ -51,7 +52,7 @@ namespace Lineage2.Server
                 }
                 else
                 {
-                    logger.Information($"Для пакета D0 c SecondOpcode:{packet.SecondOpcode:X2} нет обработчика");
+                    logger.Error($"Для пакета D0 c SecondOpcode:{packet.SecondOpcode:X2} нет обработчика");
                 }
             }
         }

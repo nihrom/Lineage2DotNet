@@ -3,6 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using Lineage2.Engine;
 using Lineage2.Model;
 using Lineage2.Model.GeoEngine;
+using Lineage2.Model.GeoEngine.PathFinding;
 using Lineage2.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -72,6 +73,7 @@ namespace Lineage2.Server
                     builder.RegisterType<ConnectionHandler>();
                     builder.Register<ServerConfig>(c => c.Resolve<IOptions<ServerConfig>>().Value);
                     builder.RegisterType<GeoEngine>().SingleInstance().AutoActivate();
+                    builder.RegisterType<GeoPathFinding>().As<PathFinding>().SingleInstance().AutoActivate();
                     builder.RegisterType<WorldLauncher>().SingleInstance().AutoActivate();
                 })
                 .UseSerilog(Log.Logger, false)

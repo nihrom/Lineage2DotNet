@@ -481,5 +481,23 @@ namespace Lineage2.Server
 
             return p;
         }
+
+        public Packet CharMoveToLocation(Vector3 current, Vector3 destination)
+        {
+            byte opcode = 0x01;
+            Packet p = new Packet(opcode);
+
+            p.WriteInt(255);//character.ObjId);
+
+            p.WriteInt((int)destination.x);
+            p.WriteInt((int)destination.y);
+            p.WriteInt((int)destination.z);
+
+            p.WriteInt((int)current.x);
+            p.WriteInt((int)current.y);
+            p.WriteInt((int)current.z);
+
+            return p;
+        }
     }
 }

@@ -11,11 +11,13 @@ namespace Lineage2.Model.GeoEngine.PathFinding
         private Node[] _neighbors;
         private Node _parent;
         private short _cost;
+        private PathFinding pathFinding;
 
-        public Node(AbstractNodeLoc Loc, int Neighbors_idx)
+        public Node(AbstractNodeLoc Loc, int Neighbors_idx, PathFinding pathFinding)
         {
             _loc = Loc;
             _neighborsIdx = Neighbors_idx;
+            this.pathFinding = pathFinding;
         }
 
         public void setParent(Node p)
@@ -31,7 +33,7 @@ namespace Lineage2.Model.GeoEngine.PathFinding
         public void attacheNeighbors()
         {
             if (_loc == null) _neighbors = null;
-            else _neighbors = PathFinding.getInstance().readNeighbors(_loc.getNodeX(), _loc.getNodeY(), _neighborsIdx);
+            else _neighbors = pathFinding.readNeighbors(_loc.getNodeX(), _loc.getNodeY(), _neighborsIdx);
         }
 
         public Node[] getNeighbors()
