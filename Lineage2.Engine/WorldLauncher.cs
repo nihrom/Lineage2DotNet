@@ -28,6 +28,7 @@ namespace Lineage2.Engine
             NpcFactory npcFactory = new NpcFactory();
             NpcTemplates = npcFactory.Initialize();
             L2Npcs = new List<L2Npc>(Spawns.Count);
+
             foreach (var spawn in Spawns)
             {
                 if (NpcTemplates.TryGetValue(spawn.SpanwnTemplateId, out NpcTemplate template))

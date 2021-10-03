@@ -106,5 +106,11 @@ namespace Lineage2.Server
             var packetSend = packetBuilder.ExSendManorList();
             await gameClient.SendAsync(packetSend);
         }
+
+        public async Task RequestShowMiniMap(Packet packet)
+        {
+            var packetSend = packetBuilder.ShowMiniMap();
+            await gameClient.SendAsync(packetSend);
+        }
     }
 }

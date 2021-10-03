@@ -9,5 +9,8 @@
     "istestserver": "false",
     "max_players": "100",
     "lazy_html_cache": "true"
+  },
+  "DownloadobleResources": {
+    "PathNodes": ["13_14,"]
   }
 }

@@ -21,7 +21,7 @@ namespace Lineage2.Model
 
         public Dictionary<int, NpcTemplate> Initialize()
         {
-            string path = Directory.GetCurrentDirectory() + @"\" + @"data\json\npcs\";
+            string path = Directory.GetCurrentDirectory() + @"\data\json\npcs\";
             string[] xmlFilesArray = Directory.GetFiles(path);
             var npcTemplates = new ConcurrentBag<NpcTemplate>();
 
@@ -44,8 +44,10 @@ namespace Lineage2.Model
 
         public List<NpcTemplate> LoadTemplateFromFile(string path)
         {
-            string json = File.ReadAllText(path);
-            var localNpcTemplates = JsonConvert.DeserializeObject<List<NpcTemplate>>(json);
+            string jsonNpcTemplates = File.ReadAllText(path);
+
+            var localNpcTemplates = JsonConvert.DeserializeObject<List<NpcTemplate>>(jsonNpcTemplates);
+
             return localNpcTemplates;
         }
     }

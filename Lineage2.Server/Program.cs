@@ -78,8 +78,8 @@ namespace Lineage2.Server
                     builder.RegisterType<L2PlayersRepository>().As<IL2PlayersRepository>().InstancePerLifetimeScope();
                     builder.RegisterType<SpawnsRepository>().As<ISpawnsRepository>().InstancePerLifetimeScope();
 
-                    builder.RegisterType<GeoEngine>().SingleInstance().AutoActivate();
-                    builder.RegisterType<GeoPathFinding>().As<PathFinding>().SingleInstance().AutoActivate();
+                    //builder.RegisterType<GeoEngine>().SingleInstance().AutoActivate();
+                    //builder.RegisterType<GeoPathFinding>().As<PathFinding>().SingleInstance().AutoActivate();
                     builder.RegisterType<WorldLauncher>().SingleInstance().AutoActivate();
 
 

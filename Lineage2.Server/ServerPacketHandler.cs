@@ -23,6 +23,7 @@ namespace Lineage2.Server
             ClientPackets.TryAdd(0x0d, mainController.CharacterSelected);
             ClientPackets.TryAdd(0x03, mainController.EnterWorld);
             ClientPackets.TryAdd(0x01, mainController.MoveBackwardToLocation);
+            ClientPackets.TryAdd(0xcd, mainController.RequestShowMiniMap);
 
             ClientPacketsD0.TryAdd(0x08, mainController.ExSendManorList);
         }

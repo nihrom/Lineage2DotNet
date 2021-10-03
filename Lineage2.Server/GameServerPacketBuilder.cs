@@ -482,6 +482,17 @@ namespace Lineage2.Server
             return p;
         }
 
+        public Packet ShowMiniMap()
+        {
+            byte opcode = 0x9d;
+            Packet p = new Packet(opcode);
+
+            p.WriteDouble(1665);
+            p.WriteDouble(0);
+
+            return p;
+        }
+
         public Packet CharMoveToLocation(Vector3 current, Vector3 destination)
         {
             byte opcode = 0x01;
