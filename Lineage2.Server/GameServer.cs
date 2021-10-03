@@ -24,7 +24,6 @@ namespace Lineage2.Server
 
         public void Start()
         {
-            //_listener = new TcpListener(IPAddress.Any, _serverConfig.Port);
             _listener = new TcpListener(IPAddress.Parse(_serverConfig.Host), _serverConfig.Port);
 
             try

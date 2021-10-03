@@ -7,8 +7,8 @@ namespace Lineage2.Server
 {
     public class GameCrypt : INetworkCrypt
     {
-        private readonly byte[] _inkey = new byte[16];
-        private readonly byte[] _outkey = new byte[16];
+        private readonly byte[] inputKey = new byte[16];
+        private readonly byte[] outputKey = new byte[16];
         private bool _isEnabled;
 
         public GameCrypt(byte[] blowfishKey)
@@ -16,12 +16,12 @@ namespace Lineage2.Server
             SetKey(blowfishKey);
         }
 
-        public byte[] BlowfishKey => _inkey;
+        public byte[] BlowfishKey => inputKey;
 
         public void SetKey(byte[] key)
         {
-            key.CopyTo(_inkey, 0);
-            key.CopyTo(_outkey, 0);
+            key.CopyTo(inputKey, 0);
+            key.CopyTo(outputKey, 0);
         }
 
         public void EnableCrypt()
@@ -38,15 +38,15 @@ namespace Lineage2.Server
             for (int index = 0; index < raw.Length; ++index)
             {
                 uint num2 = raw[index] & (uint)byte.MaxValue;
-                raw[index] = (byte)(num2 ^ _inkey[index & 15] ^ num1);
+                raw[index] = (byte)(num2 ^ inputKey[index & 15] ^ num1);
                 num1 = num2;
             }
 
-            uint num3 = ((_inkey[8] & (uint)byte.MaxValue) | (uint)((_inkey[9] << 8) & 65280) | (uint)((_inkey[10] << 16) & 16711680) | (uint)((_inkey[11] << 24) & -16777216)) + (uint)raw.Length;
-            _inkey[8] = (byte)(num3 & byte.MaxValue);
-            _inkey[9] = (byte)((num3 >> 8) & byte.MaxValue);
-            _inkey[10] = (byte)((num3 >> 16) & byte.MaxValue);
-            _inkey[11] = (byte)((num3 >> 24) & byte.MaxValue);
+            uint num3 = ((inputKey[8] & (uint)byte.MaxValue) | (uint)((inputKey[9] << 8) & 65280) | (uint)((inputKey[10] << 16) & 16711680) | (uint)((inputKey[11] << 24) & -16777216)) + (uint)raw.Length;
+            inputKey[8] = (byte)(num3 & byte.MaxValue);
+            inputKey[9] = (byte)((num3 >> 8) & byte.MaxValue);
+            inputKey[10] = (byte)((num3 >> 16) & byte.MaxValue);
+            inputKey[11] = (byte)((num3 >> 24) & byte.MaxValue);
         }
 
         public void Encrypt(byte[] raw)
@@ -56,15 +56,15 @@ namespace Lineage2.Server
                 uint num1 = 0;
                 for (int index = 0; index < raw.Length; ++index)
                 {
-                    num1 = (raw[index] & (uint)byte.MaxValue) ^ _outkey[index & 15] ^ num1;
+                    num1 = (raw[index] & (uint)byte.MaxValue) ^ outputKey[index & 15] ^ num1;
                     raw[index] = (byte)num1;
                 }
 
-                uint num2 = ((_outkey[8] & (uint)byte.MaxValue) | (uint)((_outkey[9] << 8) & 65280) | (uint)((_outkey[10] << 16) & 16711680) | (uint)((_outkey[11] << 24) & -16777216)) + (uint)raw.Length;
-                _outkey[8] = (byte)(num2 & byte.MaxValue);
-                _outkey[9] = (byte)((num2 >> 8) & byte.MaxValue);
-                _outkey[10] = (byte)((num2 >> 16) & byte.MaxValue);
-                _outkey[11] = (byte)((num2 >> 24) & byte.MaxValue);
+                uint num2 = ((outputKey[8] & (uint)byte.MaxValue) | (uint)((outputKey[9] << 8) & 65280) | (uint)((outputKey[10] << 16) & 16711680) | (uint)((outputKey[11] << 24) & -16777216)) + (uint)raw.Length;
+                outputKey[8] = (byte)(num2 & byte.MaxValue);
+                outputKey[9] = (byte)((num2 >> 8) & byte.MaxValue);
+                outputKey[10] = (byte)((num2 >> 16) & byte.MaxValue);
+                outputKey[11] = (byte)((num2 >> 24) & byte.MaxValue);
             }
         }
     }

@@ -32,7 +32,7 @@ namespace Lineage2.Server
             var key = gameClient.L2Connection.Crypt.BlowfishKey;
             var packetSend = packetBuilder.CryptInit(key);
             //TODO: Тут хорошо бы сначала дождаться отправки, а потом только включить шифрование
-            _ = gameClient.SendAsync(packetSend);
+            await gameClient.SendAsync(packetSend);
             gameClient.L2Connection.Crypt.EnableCrypt();
         }
 

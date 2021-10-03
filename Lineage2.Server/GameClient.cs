@@ -32,7 +32,7 @@ namespace Lineage2.Server
 
         public void OnReadAsync(Packet p)
         {
-            _ = Task.Factory.StartNew(() => packetHandler.Handle(p));
+            _ = packetHandler.Handle(p);
         }
 
         private void LoggingSendPacket(Packet p)
