@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Lineage2.Repositories.Migrations
+namespace Lineage2.Database.Migrations
 {
     public partial class Spawn_Fix_Period : Migration
     {

@@ -1,6 +1,6 @@
-﻿using Lineage2.Model;
+﻿using Lineage2.Database;
+using Lineage2.Model;
 using Lineage2.Model.Templates;
-using Lineage2.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

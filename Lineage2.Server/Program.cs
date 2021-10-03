@@ -19,6 +19,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Tools.NpcTemplateConvertXmlToJson;
+using Lineage2.Database;
 
 namespace Lineage2.Server
 {

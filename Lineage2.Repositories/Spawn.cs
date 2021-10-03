@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Lineage2.Repositories
+namespace Lineage2.Database
 {
     public class Spawn
     {
