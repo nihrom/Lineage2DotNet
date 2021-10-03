@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using Lineage2.Repositories;
+using Lineage2.Database;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
