@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lineage2.Model\Lineage2.Model.csproj" />
-    <ProjectReference Include="..\Lineage2.Repositories\Lineage2.Database.csproj" />
   </ItemGroup>
   
 </Project>

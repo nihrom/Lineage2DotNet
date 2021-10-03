@@ -19,6 +19,8 @@ using System.IO;
 using System.Threading.Tasks;
 using Tools.NpcTemplateConvertXmlToJson;
 using Lineage2.Database;
+using Lineage2.Engine.Repositories;
+using Lineage2.Database.Repositories;
 
 namespace Lineage2.Server
 {
@@ -72,9 +74,15 @@ namespace Lineage2.Server
                     builder.RegisterType<GameServer>();
                     builder.RegisterType<ConnectionHandler>();
                     builder.Register<ServerConfig>(c => c.Resolve<IOptions<ServerConfig>>().Value);
+
+                    builder.RegisterType<L2PlayersRepository>().As<IL2PlayersRepository>().InstancePerLifetimeScope();
+                    builder.RegisterType<SpawnsRepository>().As<ISpawnsRepository>().InstancePerLifetimeScope();
+
                     builder.RegisterType<GeoEngine>().SingleInstance().AutoActivate();
                     builder.RegisterType<GeoPathFinding>().As<PathFinding>().SingleInstance().AutoActivate();
                     builder.RegisterType<WorldLauncher>().SingleInstance().AutoActivate();
+
+
                 })
                 .UseSerilog(Log.Logger, false)
                 .UseConsoleLifetime();

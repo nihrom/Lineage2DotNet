@@ -14,4 +14,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Lineage2.Engine\Lineage2.Engine.csproj" />
+    <ProjectReference Include="..\Lineage2.Model\Lineage2.Model.csproj" />
+  </ItemGroup>
+
 </Project>

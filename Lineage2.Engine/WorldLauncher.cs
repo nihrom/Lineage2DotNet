@@ -1,7 +1,6 @@
-﻿using Lineage2.Database;
+﻿using Lineage2.Engine.Repositories;
 using Lineage2.Model;
 using Lineage2.Model.Templates;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +16,9 @@ namespace Lineage2.Engine
         public static List<L2Npc> L2Npcs { get; set; }
         public static int GlobaL2Ids = 260;
 
-        public WorldLauncher(Lineage2DbContext dbContext)
+        public WorldLauncher(ISpawnsRepository spawnsRepository)
         {
-            Spawns = dbContext.Spawns
-                .AsNoTracking()
-                .ToList();
+            Spawns = spawnsRepository.GetSpawns();
 
             Launche();
         }
