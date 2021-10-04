@@ -36,6 +36,12 @@ namespace Lineage2.Server
             gameClient.L2Connection.Crypt.EnableCrypt();
         }
 
+        public async Task Logout(Packet packet)
+        {
+            var packetSend = packetBuilder.Logout();
+            _ = gameClient.SendAsync(packetSend);
+        }
+
         public async Task AuthLogin(Packet packet)
         {
             var _loginName = packet.ReadString();

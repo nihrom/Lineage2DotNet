@@ -8,7 +8,8 @@ namespace Lineage2.Database.Repositories
 {
     public class L2PlayersRepository : IL2PlayersRepository
     {
-        Lineage2DbContext db;
+        private readonly Lineage2DbContext db;
+        private readonly List<L2Player> l2Players;
 
         public L2PlayersRepository(Lineage2DbContext db)
         {

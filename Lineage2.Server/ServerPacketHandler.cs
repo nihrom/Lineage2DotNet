@@ -19,10 +19,11 @@ namespace Lineage2.Server
         {
             mainController = new MainController(gameClient);
             ClientPackets.TryAdd(0x00, mainController.ProtocolVersion);
-            ClientPackets.TryAdd(0x08, mainController.AuthLogin);
-            ClientPackets.TryAdd(0x0d, mainController.CharacterSelected);
-            ClientPackets.TryAdd(0x03, mainController.EnterWorld);
             ClientPackets.TryAdd(0x01, mainController.MoveBackwardToLocation);
+            ClientPackets.TryAdd(0x03, mainController.EnterWorld);
+            ClientPackets.TryAdd(0x08, mainController.AuthLogin);
+            ClientPackets.TryAdd(0x09, mainController.Logout);
+            ClientPackets.TryAdd(0x0d, mainController.CharacterSelected);
             ClientPackets.TryAdd(0xcd, mainController.RequestShowMiniMap);
 
             ClientPacketsD0.TryAdd(0x08, mainController.ExSendManorList);

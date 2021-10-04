@@ -129,6 +129,14 @@ namespace Lineage2.Server
             return p;
         }
 
+        public Packet Logout()
+        {
+            byte opcode = 0x26;
+            Packet p = new Packet(opcode);
+
+            return p;
+        }
+
         public Packet CharacterSelected(int sessionKeyPlayOk1)
         {
             byte opcode = 0x15;
