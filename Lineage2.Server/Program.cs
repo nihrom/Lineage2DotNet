@@ -63,7 +63,6 @@ namespace Lineage2.Server
                         .AutoActivate();
 
                     builder.RegisterType<GameServer>();
-                    builder.RegisterType<ConnectionHandler>();
                     builder.Register<ServerConfig>(c => c.Resolve<IOptions<ServerConfig>>().Value);
 
                     builder.RegisterType<L2PlayersRepository>().As<IL2PlayersRepository>().InstancePerLifetimeScope();

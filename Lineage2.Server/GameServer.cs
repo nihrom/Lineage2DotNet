@@ -1,4 +1,7 @@
-﻿using Lineage2.Engine;
+﻿using L2Crypt;
+using Lineage2.Engine;
+using Lineage2.Network;
+using Lineage2.Unility;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -14,15 +17,18 @@ namespace Lineage2.Server
         private readonly ILogger logger;
         private readonly ServerConfig _serverConfig;
         private TcpListener _listener;
-        private ConnectionHandler connectionHandler;
         private readonly WorldLauncher worldLauncher;
 
-        public GameServer(ILogger logger, ServerConfig serverConfig, ConnectionHandler connectionHandler, WorldLauncher worldLauncher)
+        ScrambledKeyPair scrambledKeyPair = new ScrambledKeyPair(ScrambledKeyPair.genKeyPair());
+        private byte[] blowfishKey = new byte[16];
+
+        public GameServer(ILogger logger, ServerConfig serverConfig, WorldLauncher worldLauncher)
         {
             this.logger = logger;
             _serverConfig = serverConfig;
-            this.connectionHandler = connectionHandler;
             this.worldLauncher = worldLauncher;
+
+            new Random().NextBytes(blowfishKey);
         }
 
         public async Task Start()
@@ -66,7 +72,10 @@ namespace Lineage2.Server
         {
             logger.Information($"Получен запрос на подключение от: {client.Client.RemoteEndPoint}");
 
-            connectionHandler.Handle(client);
+            byte[] key = BlowFishKeygen.GetRandomKey();
+            var crypt = new GameCrypt(key);
+            var connection = new L2Connection(client, crypt);
+            var loginClient = new GameClient(connection);
         }
     }
 }
