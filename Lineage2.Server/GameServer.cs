@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using Lineage2.Engine;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -14,16 +15,20 @@ namespace Lineage2.Server
         private readonly ServerConfig _serverConfig;
         private TcpListener _listener;
         private ConnectionHandler connectionHandler;
+        private readonly WorldLauncher worldLauncher;
 
-        public GameServer(ILogger logger, ServerConfig serverConfig, ConnectionHandler connectionHandler)
+        public GameServer(ILogger logger, ServerConfig serverConfig, ConnectionHandler connectionHandler, WorldLauncher worldLauncher)
         {
             this.logger = logger;
             _serverConfig = serverConfig;
             this.connectionHandler = connectionHandler;
+            this.worldLauncher = worldLauncher;
         }
 
-        public void Start()
+        public async Task Start()
         {
+            await worldLauncher.Launche();
+
             _listener = new TcpListener(IPAddress.Parse(_serverConfig.Host), _serverConfig.Port);
 
             try
@@ -39,7 +44,13 @@ namespace Lineage2.Server
             }
 
             logger.Information($"Сервер аутентификации слушает входящих клиентов на {_listener.LocalEndpoint}");
+
             WaitForClients();
+        }
+
+        public async Task Stop()
+        {
+            //TODO: Надо добавить по цепочке методы для штатной оставноки сервера. Отключать пользователей, сохранять данные.
         }
 
         private async void WaitForClients()

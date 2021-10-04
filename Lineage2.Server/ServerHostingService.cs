@@ -20,17 +20,16 @@ namespace Lineage2.Server
             this.gameServer = gameServer;
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
-            gameServer.Start();
-            return Task.Delay(0);
+            await gameServer.Start();
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync(CancellationToken cancellationToken)
         {
-            //TODO: Надо добавить по цепочке методы для штатной оставноки сервера. Отключать пользователей, сохранять данные.
             logger.Information("Server Stop");
-            return Task.Delay(0);
+
+            await gameServer.Stop();
         }
     }
 }

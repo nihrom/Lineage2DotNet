@@ -36,15 +36,6 @@ namespace Lineage2.Server
             await CreateHostBuilder(args)
                 .Build()
                 .RunAsync();
-
-            //new NpcFactory().Initialize();
-            //var serverConfig = JsonConvert.DeserializeObject<ServerConfig>(File.ReadAllText(@"ServerConfig.json"));
-            //var connectionHandller = new ConnectionHandler();
-            //var gameServer = new GameServer(Log.Logger, serverConfig, connectionHandller);
-            //gameServer.Start();
-
-            //Console.WriteLine("Hello World!");
-            //Console.ReadLine();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -80,9 +71,7 @@ namespace Lineage2.Server
 
                     //builder.RegisterType<GeoEngine>().SingleInstance().AutoActivate();
                     //builder.RegisterType<GeoPathFinding>().As<PathFinding>().SingleInstance().AutoActivate();
-                    builder.RegisterType<WorldLauncher>().SingleInstance().AutoActivate();
-
-
+                    builder.RegisterType<WorldLauncher>().SingleInstance();
                 })
                 .UseSerilog(Log.Logger, false)
                 .UseConsoleLifetime();
