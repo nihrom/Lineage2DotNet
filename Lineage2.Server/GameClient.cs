@@ -1,4 +1,7 @@
 using L2Crypt;
+using Lineage2.Engine;
+using Lineage2.Engine.User;
+using Lineage2.Engine.User.Controllers;
 using Lineage2.Network;
 using Lineage2.Unility;
 using Serilog;
@@ -16,10 +19,16 @@ namespace Lineage2.Server
         public L2Connection L2Connection { get; private set; }
         public readonly ServerPacketHandler packetHandler;
 
-        public GameClient(L2Connection l2Connection)
+        public GameClient(L2Connection l2Connection, WorldLauncher worldLauncher)
         {
+            var mainOutput = new UserMainOutput(this);
+            var userAvatar = new UserAvatar(mainOutput);
+            var mainController = new MainController(worldLauncher, userAvatar);
+
+            var packetController = new PacketController(mainController);
+
             L2Connection = l2Connection;
-            packetHandler = new ServerPacketHandler(this);
+            packetHandler = new ServerPacketHandler(packetController);
             L2Connection.ReceivedPacket += LoggingReceivedPacket;
             L2Connection.SendingPacket += LoggingSendPacket;
             l2Connection.ReceivedPacket += OnReadAsync;

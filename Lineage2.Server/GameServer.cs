@@ -75,7 +75,9 @@ namespace Lineage2.Server
             byte[] key = BlowFishKeygen.GetRandomKey();
             var crypt = new GameCrypt(key);
             var connection = new L2Connection(client, crypt);
-            var loginClient = new GameClient(connection);
+            var loginClient = new GameClient(connection, worldLauncher);
+
+            Task.Factory.StartNew(connection.ReadAsync);
         }
     }
 }

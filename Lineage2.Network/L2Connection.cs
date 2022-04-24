@@ -26,7 +26,6 @@ namespace Lineage2.Network
             this.tcpClient = tcpClient;
             networkStream = tcpClient.GetStream();
             Crypt = crypt;
-            Task.Factory.StartNew(ReadAsync);
         }
 
         /// <summary>

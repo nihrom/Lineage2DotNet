@@ -55,50 +55,50 @@ namespace Lineage2.Network
         }
 
         /// <summary>
-        /// Writes <see cref="byte"/> value into packet buffer.
+        /// Writes byte value into packet buffer.
         /// </summary>
-        /// <param name="v"><see cref="byte"/> value to write.</param>
-        public unsafe void WriteByte(byte v)
+        /// <param name="value"><see cref="byte"/> value to write.</param>
+        public unsafe void WriteByte(byte value)
         {
             ValidateBufferSize(sizeof(byte));
 
             fixed (byte* buf = _buffer)
-                *(buf + _offset++) = v;
+                *(buf + _offset++) = value;
         }
 
         /// <summary>
         /// Writes array of <see cref="byte"/> values into packet buffer.
         /// </summary>
-        /// <param name="v">Array of <see cref="byte"/> values.</param>
-        public void WriteByte(params byte[] v)
+        /// <param name="value">Array of <see cref="byte"/> values.</param>
+        public void WriteByte(params byte[] value)
         {
-            WriteByteArray(v);
+            WriteByteArray(value);
         }
 
         /// <summary>
         /// Writes array of <see cref="byte"/> into packet buffer.
         /// </summary>
-        /// <param name="v">Array of <see cref="byte"/> values.</param>
-        public void WriteByteArray(byte[] v)
+        /// <param name="value">Array of <see cref="byte"/> values.</param>
+        public void WriteByteArray(byte[] value)
         {
-            int length = v.Length;
+            int length = value.Length;
 
             ValidateBufferSize(length);
 
-            L2Buffer.Copy(v, 0, _buffer, _offset, length);
+            L2Buffer.Copy(value, 0, _buffer, _offset, length);
             _offset += length;
         }
 
         /// <summary>
         /// Writes <see cref="short"/> value into packet buffer.
         /// </summary>
-        /// <param name="v"><see cref="short"/> value.</param>
-        public unsafe void WriteShort(short v)
+        /// <param name="value"><see cref="short"/> value.</param>
+        public unsafe void WriteShort(short value)
         {
             ValidateBufferSize(sizeof(short));
 
             fixed (byte* buf = _buffer)
-                *(short*)(buf + _offset) = v;
+                *(short*)(buf + _offset) = value;
 
             _offset += sizeof(short);
         }
@@ -106,16 +106,16 @@ namespace Lineage2.Network
         /// <summary>
         /// Writes array of <see cref="short"/> values into packet buffer.
         /// </summary>
-        /// <param name="v">Array of <see cref="short"/> values.</param>
-        public unsafe void WriteShort(params short[] v)
+        /// <param name="value">Array of <see cref="short"/> values.</param>
+        public unsafe void WriteShort(params short[] value)
         {
-            int length = v.Length * sizeof(short);
+            int length = value.Length * sizeof(short);
 
             ValidateBufferSize(length);
 
             fixed (byte* buf = _buffer)
             {
-                fixed (short* w = v)
+                fixed (short* w = value)
                     L2Buffer.UnsafeCopy(w, length, buf, ref _offset);
             }
         }
@@ -123,13 +123,13 @@ namespace Lineage2.Network
         /// <summary>
         /// Writes <see cref="int"/> value to packet buffer.
         /// </summary>
-        /// <param name="v"><see cref="int"/> value.</param>
-        public unsafe void WriteInt(int v)
+        /// <param name="value"><see cref="int"/> value.</param>
+        public unsafe void WriteInt(int value)
         {
             ValidateBufferSize(sizeof(int));
 
             fixed (byte* buf = _buffer)
-                *(int*)(buf + _offset) = v;
+                *(int*)(buf + _offset) = value;
 
             _offset += sizeof(int);
         }
@@ -137,16 +137,16 @@ namespace Lineage2.Network
         /// <summary>
         /// Writes array of <see cref="int"/> values into packet buffer.
         /// </summary>
-        /// <param name="v">Array of <see cref="int"/> values.</param>
-        public unsafe void WriteInt(params int[] v)
+        /// <param name="value">Array of <see cref="int"/> values.</param>
+        public unsafe void WriteInt(params int[] value)
         {
-            int length = v.Length * sizeof(int);
+            int length = value.Length * sizeof(int);
 
             ValidateBufferSize(Length);
 
             fixed (byte* buf = _buffer)
             {
-                fixed (int* w = v)
+                fixed (int* w = value)
                     L2Buffer.UnsafeCopy(w, length, buf, ref _offset);
             }
         }
@@ -154,16 +154,16 @@ namespace Lineage2.Network
         /// <summary>
         /// Writes array of <see cref="int"/> values into packet buffer.
         /// </summary>
-        /// <param name="v">Array of <see cref="int"/> values.</param>
-        public unsafe void WriteIntArray(int[] v)
+        /// <param name="value">Array of <see cref="int"/> values.</param>
+        public unsafe void WriteIntArray(int[] value)
         {
-            int length = v.Length * sizeof(int);
+            int length = value.Length * sizeof(int);
 
             ValidateBufferSize(Length);
 
             fixed (byte* buf = _buffer)
             {
-                fixed (int* w = v)
+                fixed (int* w = value)
                     L2Buffer.UnsafeCopy(w, length, buf, ref _offset);
             }
         }
@@ -171,13 +171,13 @@ namespace Lineage2.Network
         /// <summary>
         /// Writes <see cref="double"/> value into packet buffer.
         /// </summary>
-        /// <param name="v"><see cref="double"/> value.</param>
-        public unsafe void WriteDouble(double v)
+        /// <param name="value"><see cref="double"/> value.</param>
+        public unsafe void WriteDouble(double value)
         {
             ValidateBufferSize(sizeof(double));
 
             fixed (byte* buf = _buffer)
-                *(double*)(buf + _offset) = v;
+                *(double*)(buf + _offset) = value;
 
             _offset += sizeof(double);
         }
@@ -185,16 +185,16 @@ namespace Lineage2.Network
         /// <summary>
         /// Writes array of <see cref="double"/> values into packet buffer.
         /// </summary>
-        /// <param name="v">Array of <see cref="double"/> values.</param>
-        public unsafe void WriteDouble(params double[] v)
+        /// <param name="value">Array of <see cref="double"/> values.</param>
+        public unsafe void WriteDouble(params double[] value)
         {
-            int length = v.Length * sizeof(double);
+            int length = value.Length * sizeof(double);
 
             ValidateBufferSize(length);
 
             fixed (byte* buf = _buffer)
             {
-                fixed (double* w = v)
+                fixed (double* w = value)
                     L2Buffer.UnsafeCopy(w, length, buf, ref _offset);
             }
         }
@@ -202,13 +202,13 @@ namespace Lineage2.Network
         /// <summary>
         /// Writes <see cref="long"/> value into packet buffer.
         /// </summary>
-        /// <param name="v"><see cref="long"/> value.</param>
-        public unsafe void WriteLong(long v)
+        /// <param name="value"><see cref="long"/> value.</param>
+        public unsafe void WriteLong(long value)
         {
             ValidateBufferSize(sizeof(long));
 
             fixed (byte* buf = _buffer)
-                *(long*)(buf + _offset) = v;
+                *(long*)(buf + _offset) = value;
 
             _offset += sizeof(long);
         }
@@ -216,16 +216,16 @@ namespace Lineage2.Network
         /// <summary>
         /// Writes array of <see cref="long"/> values into packet buffer.
         /// </summary>
-        /// <param name="v">Array of <see cref="long"/> values.</param>
-        public unsafe void WriteLong(params long[] v)
+        /// <param name="value">Array of <see cref="long"/> values.</param>
+        public unsafe void WriteLong(params long[] value)
         {
-            int length = v.Length * sizeof(long);
+            int length = value.Length * sizeof(long);
 
             ValidateBufferSize(length);
 
             fixed (byte* buf = _buffer)
             {
-                fixed (long* w = v)
+                fixed (long* w = value)
                     L2Buffer.UnsafeCopy(w, length, buf, ref _offset);
             }
         }
@@ -254,15 +254,15 @@ namespace Lineage2.Network
         /// <param name="s">Array of <see cref="string"/> values.</param>
         public unsafe void WriteString(params string[] s)
         {
-            string v = string.Join(string.Empty, s.Select(t => t + '\0').ToArray());
+            string value = string.Join(string.Empty, s.Select(t => t + '\0').ToArray());
 
-            int length = v.Length * sizeof(char);
+            int length = value.Length * sizeof(char);
 
             ValidateBufferSize(length);
 
             fixed (byte* buf = _buffer)
             {
-                fixed (char* w = v)
+                fixed (char* w = value)
                     L2Buffer.UnsafeCopy(w, length, buf, ref _offset);
             }
         }
@@ -270,19 +270,19 @@ namespace Lineage2.Network
         /// <summary>
         /// Writes <see cref="bool"/> value to packet buffer. (Inner network only)
         /// </summary>
-        /// <param name="v"><see cref="bool"/> value.</param>
-        public void InternalWriteBool(bool v)
+        /// <param name="value"><see cref="bool"/> value.</param>
+        public void InternalWriteBool(bool value)
         {
-            WriteByte(v ? (byte)0x01 : (byte)0x00);
+            WriteByte(value ? (byte)0x01 : (byte)0x00);
         }
 
         /// <summary>
         /// Writes <see cref="DateTime"/> value to packet buffer. (Inner network only)
         /// </summary>
-        /// <param name="v"><see cref="DateTime"/> value.</param>
-        public void InternalWriteDateTime(DateTime v)
+        /// <param name="value"><see cref="DateTime"/> value.</param>
+        public void InternalWriteDateTime(DateTime value)
         {
-            WriteLong(v.Ticks);
+            WriteLong(value.Ticks);
         }
 
         /// <summary>
@@ -325,9 +325,9 @@ namespace Lineage2.Network
         {
             fixed (byte* buf = _buffer)
             {
-                short v = *(short*)(buf + _offset);
+                short value = *(short*)(buf + _offset);
                 _offset += sizeof(short);
-                return v;
+                return value;
             }
         }
 
@@ -339,9 +339,9 @@ namespace Lineage2.Network
         {
             fixed (byte* buf = _buffer)
             {
-                int v = *(int*)(buf + _offset);
+                int value = *(int*)(buf + _offset);
                 _offset += sizeof(int);
-                return v;
+                return value;
             }
         }
 
@@ -353,9 +353,9 @@ namespace Lineage2.Network
         {
             fixed (byte* buf = _buffer)
             {
-                double v = *(double*)(buf + _offset);
+                double value = *(double*)(buf + _offset);
                 _offset += sizeof(double);
-                return v;
+                return value;
             }
         }
 
@@ -367,9 +367,9 @@ namespace Lineage2.Network
         {
             fixed (byte* buf = _buffer)
             {
-                long v = *(long*)(buf + _offset);
+                long value = *(long*)(buf + _offset);
                 _offset += sizeof(long);
-                return v;
+                return value;
             }
         }
 

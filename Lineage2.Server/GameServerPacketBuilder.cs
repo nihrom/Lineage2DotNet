@@ -7,11 +7,12 @@ using System.Text;
 
 namespace Lineage2.Server
 {
-    class GameServerPacketBuilder
+    public static class GameServerPacketBuilder
     {
-        public Packet CryptInit(byte[] key)
+        public static Packet ProtocolResponse(byte[] key)
         {
             byte opcode = 0x00;
+
             Packet p = new Packet(opcode);
             p.WriteByte(0x01);
             p.WriteByteArray(key);
@@ -21,29 +22,13 @@ namespace Lineage2.Server
             return p;
         }
 
-        public Packet CharList(int sessionKeyPlayOk1)
+        public static Packet CharList(List<L2Player> players, int sessionKeyPlayOk1)
         {
             byte opcode = 0x13;
             Packet p = new Packet(opcode);
-            p.WriteInt(1); //количесво чаров
+            p.WriteInt(players.Count); //количесво чаров
 
             int lastSelectedObjId = 0;
-
-            L2Player l2Player = new L2Player()
-            {
-                CharTemplate = new CharTemplate(),
-                AccountName = "Nihrom",
-                ClassId = ClassId.OrcFighter,
-                Face = Face.TypeB,
-                HairColor = HairColor.TypeB,
-                HairStyleId = HairStyleId.TypeD,
-                Sex = Gender.Male,
-                Name = "OrkNagibator",
-                ObjId = 255
-            };
-
-            List<L2Player> players = new List<L2Player>();
-            players.Add(l2Player);
 
             //if (_players.Count > 0)
             //{
@@ -72,9 +57,9 @@ namespace Lineage2.Server
 
                 p.WriteInt(0x01); // active ??
 
-                p.WriteInt(-56693);//player.X);
-                p.WriteInt(-113610);//player.Y);
-                p.WriteInt(-690);//player.Z);
+                p.WriteInt((int)player.Position.x);
+                p.WriteInt((int)player.Position.y);
+                p.WriteInt((int)player.Position.z);
 
                 p.WriteDouble((double)1000);//player.CharStatus.CurrentHp);
                 p.WriteDouble((double)700);//player.CharStatus.CurrentMp);
@@ -129,7 +114,7 @@ namespace Lineage2.Server
             return p;
         }
 
-        public Packet Logout()
+        public static Packet Logout()
         {
             byte opcode = 0x26;
             Packet p = new Packet(opcode);
@@ -137,23 +122,10 @@ namespace Lineage2.Server
             return p;
         }
 
-        public Packet CharacterSelected(int sessionKeyPlayOk1)
+        public static Packet CharacterSelected(L2Player _player, int sessionKeyPlayOk1)
         {
             byte opcode = 0x15;
             Packet p = new Packet(opcode);
-
-            L2Player _player = new L2Player()
-            {
-                CharTemplate = new CharTemplate(),
-                AccountName = "Nihrom",
-                ClassId = ClassId.OrcFighter,
-                Face = Face.TypeB,
-                HairColor = HairColor.TypeB,
-                HairStyleId = HairStyleId.TypeD,
-                Sex = Gender.Male,
-                Name = "OrkNagibator",
-                ObjId = 255
-            };
 
             p.WriteString(_player.Name);
             p.WriteInt(_player.ObjId);
@@ -206,28 +178,14 @@ namespace Lineage2.Server
             return p;
         }
 
-        public Packet UserInfo()
+        public static Packet UserInfo(L2Player _player)
         {
             byte opcode = 0x04;
             Packet p = new Packet(opcode);
 
-            L2Player _player = new L2Player()
-            {
-                CharTemplate = new CharTemplate(),
-                AccountName = "Nihrom",
-                ClassId = ClassId.OrcFighter,
-                Face = Face.TypeB,
-                HairColor = HairColor.TypeB,
-                HairStyleId = HairStyleId.TypeD,
-                Sex = Gender.Male,
-                Name = "OrkNagibator",
-                ObjId = 255
-            };
-
-
-            p.WriteInt(-56693);//player.X);
-            p.WriteInt(-113610);//player.Y);
-            p.WriteInt(-691);//player.Z);
+            p.WriteInt((int)_player.Position.x);
+            p.WriteInt((int)_player.Position.y);
+            p.WriteInt((int)_player.Position.z);
             p.WriteInt(28); //_player.Heading
             p.WriteInt(_player.ObjId);
 
@@ -394,7 +352,7 @@ namespace Lineage2.Server
             return p;
         }
 
-        public Packet ExSendManorList()
+        public static Packet ExSendManorList()
         {
             List<string> manorsName = new List<string>
                 {
@@ -425,7 +383,7 @@ namespace Lineage2.Server
             return p;
         }
 
-        public Packet NpcInfo(L2Npc npc)
+        public static Packet NpcInfo(L2Npc npc)
         {
             byte opcode = 0x16;
             Packet p = new Packet(opcode);
@@ -490,7 +448,7 @@ namespace Lineage2.Server
             return p;
         }
 
-        public Packet ShowMiniMap()
+        public static Packet ShowMiniMap()
         {
             byte opcode = 0x9d;
             Packet p = new Packet(opcode);
@@ -501,12 +459,12 @@ namespace Lineage2.Server
             return p;
         }
 
-        public Packet CharMoveToLocation(Vector3 current, Vector3 destination)
+        public static Packet CharMoveToLocation(L2Object l2Object, Vector3 current, Vector3 destination)
         {
             byte opcode = 0x01;
             Packet p = new Packet(opcode);
 
-            p.WriteInt(255);//character.ObjId);
+            p.WriteInt(l2Object.ObjId);
 
             p.WriteInt((int)destination.x);
             p.WriteInt((int)destination.y);

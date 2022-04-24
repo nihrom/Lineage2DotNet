@@ -13,20 +13,18 @@ namespace Lineage2.Server
         private readonly ILogger logger = Log.Logger.ForContext<ServerPacketHandler>();
         private static readonly ConcurrentDictionary<byte, Func<Packet, Task>> ClientPackets = new ConcurrentDictionary<byte, Func<Packet, Task>>();
         private static readonly ConcurrentDictionary<byte, Func<Packet, Task>> ClientPacketsD0 = new ConcurrentDictionary<byte, Func<Packet, Task>>();
-        private MainController mainController;
 
-        public ServerPacketHandler(GameClient gameClient)
+        public ServerPacketHandler(PacketController packetController)
         {
-            mainController = new MainController(gameClient);
-            ClientPackets.TryAdd(0x00, mainController.ProtocolVersion);
-            ClientPackets.TryAdd(0x01, mainController.MoveBackwardToLocation);
-            ClientPackets.TryAdd(0x03, mainController.EnterWorld);
-            ClientPackets.TryAdd(0x08, mainController.AuthLogin);
-            ClientPackets.TryAdd(0x09, mainController.Logout);
-            ClientPackets.TryAdd(0x0d, mainController.CharacterSelected);
-            ClientPackets.TryAdd(0xcd, mainController.RequestShowMiniMap);
+            ClientPackets.TryAdd(0x00, packetController.ProtocolVersion);
+            ClientPackets.TryAdd(0x01, packetController.MoveBackwardToLocation);
+            ClientPackets.TryAdd(0x03, packetController.EnterWorld);
+            ClientPackets.TryAdd(0x08, packetController.AuthLogin);
+            ClientPackets.TryAdd(0x09, packetController.Logout);
+            ClientPackets.TryAdd(0x0d, packetController.CharacterSelected);
+            ClientPackets.TryAdd(0xcd, packetController.RequestShowMiniMap);
 
-            ClientPacketsD0.TryAdd(0x08, mainController.ExSendManorList);
+            ClientPacketsD0.TryAdd(0x08, packetController.ExSendManorList);
         }
 
         public async Task Handle(Packet packet)
