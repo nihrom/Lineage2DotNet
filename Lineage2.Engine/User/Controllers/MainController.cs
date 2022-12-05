@@ -53,6 +53,12 @@ namespace Lineage2.Engine.User.Controllers
             await UserAvatar.MainOutput.ProtocolSend();
         }
 
+        public Task ValidatePosition()
+        {
+            return Task.CompletedTask;
+            throw new NotImplementedException();
+        }
+
         public async Task AuthLogin(string loginName, int playKey1, int playKey2, int loginKey1, int loginKey2)
         {
             logger.Information("AuthLogin с неймом - {0} и ключами - {1},{2},{3},{4}", loginName, playKey1, playKey2, loginKey1, loginKey2);
@@ -71,8 +77,6 @@ namespace Lineage2.Engine.User.Controllers
 
             await UserAvatar.MainOutput.UserInfo(L2Player);
 
-            int sendNpcInfoCounter = 0;
-
             var npcs = worldLauncher.L2Npcs
                 .Where(s => s.Position.x < -56693 + 1000 && s.Position.x > -56693 - 1000 && s.Position.y < -113610 + 1000 && s.Position.y > -113610 - 1000)
                 .Take(50)
@@ -80,7 +84,16 @@ namespace Lineage2.Engine.User.Controllers
 
             await UserAvatar.MainOutput.NpcInfo(npcs);
 
-            logger.Information("Отправлено {0} NpcInfo", sendNpcInfoCounter);
+            logger.Information("Отправлено {0} NpcInfo", npcs.Count);
+        }
+
+        public async Task RequestAction(int objectId, Vector3 position, byte actionId)
+        {
+            var npc = worldLauncher.L2Npcs
+                .FirstOrDefault(npc => npc.ObjId == objectId);
+
+            await UserAvatar.MainOutput.MyTargetSelected(npc);
+            await UserAvatar.MainOutput.StatusUpdate(npc);
         }
 
         public async Task CharacterSelect(int charSlot, int unk1, int unk2, int unk3, int unk4)

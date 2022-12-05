@@ -17,5 +17,7 @@ namespace Lineage2.Engine.User.Output
         Task RequestShowMiniMap();
         Task UserInfo(L2Player l2Player);
         Task NpcInfo(List<L2Npc> npcs);
+        Task StatusUpdate(L2Object l2Object);
+        Task MyTargetSelected(L2Object l2Object);
     }
 }

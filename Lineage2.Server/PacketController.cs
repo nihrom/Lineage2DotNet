@@ -46,6 +46,13 @@ namespace Lineage2.Server
             await mainController.AuthLogin(_loginName, _playKey1, _playKey2, _loginKey1, _loginKey2);
         }
 
+        internal async Task ValidatePosition(Packet packet)
+        {
+            //TODO: Переписать в соответствии с оригиналом
+
+            await mainController.ValidatePosition();
+        }
+
         public async Task CharacterSelected(Packet packet)
         {
             int _charSlot = packet.ReadInt();
@@ -60,6 +67,17 @@ namespace Lineage2.Server
         public async Task EnterWorld(Packet packet)
         {
              await mainController.EnterWorld();
+        }
+
+        public async Task RequestAction(Packet packet)
+        {
+            var objectId = packet.ReadInt();
+            var x = packet.ReadInt();
+            var y = packet.ReadInt();
+            var z = packet.ReadInt();
+            var actionId = packet.ReadByte(); // Action identifier : 0-Simple click, 1-Shift click
+
+            await mainController.RequestAction(objectId, new Vector3(x, y, z), actionId);
         }
 
         public async Task MoveBackwardToLocation(Packet packet)

@@ -86,5 +86,19 @@ namespace Lineage2.Server
                 await gameClient.SendAsync(packet);
             }
         }
+
+        public async Task StatusUpdate(L2Object l2Object)
+        {
+            var packet = GameServerPacketBuilder.StatusUpdate(l2Object);
+
+            await gameClient.SendAsync(packet);
+        }
+
+        public async Task MyTargetSelected(L2Object l2Object)
+        {
+            var packet = GameServerPacketBuilder.MyTargetSelected(l2Object);
+
+            await gameClient.SendAsync(packet);
+        }
     }
 }

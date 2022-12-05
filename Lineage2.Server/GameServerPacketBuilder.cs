@@ -13,7 +13,7 @@ namespace Lineage2.Server
         {
             byte opcode = 0x00;
 
-            Packet p = new Packet(opcode);
+            var p = new Packet(opcode);
             p.WriteByte(0x01);
             p.WriteByteArray(key);
             p.WriteInt(0x01);
@@ -473,6 +473,54 @@ namespace Lineage2.Server
             p.WriteInt((int)current.x);
             p.WriteInt((int)current.y);
             p.WriteInt((int)current.z);
+
+            return p;
+        }
+
+        public static Packet StatusUpdate(L2Object l2Object)
+        {
+            byte opcode = 0x0e;
+            Packet p = new Packet(opcode);
+
+            p.WriteInt(l2Object.ObjId);
+            p.WriteInt(2);
+            p.WriteInt(0x0a);
+            p.WriteInt(120);
+            p.WriteInt(0x09);
+            p.WriteInt(100);
+
+            return p;
+
+            //foreach (var pair in Attrs)
+            //{
+            //    WriteInt(pair.Key);
+            //    WriteInt(pair.Value);
+            //}
+        }
+
+        public static Packet MyTargetSelected(L2Object l2Object)
+        {
+            byte opcode = 0xa6;
+            Packet p = new Packet(opcode);
+
+            p.WriteInt(l2Object.ObjId);
+            p.WriteShort(2); //TODO: дописать цвет 
+
+            return p;
+        }
+
+        public static Packet StatusUpdate(int objectId, Dictionary<int, int> attributes)
+        {
+            byte opcode = 0x0e;
+            var p = new Packet(opcode);
+
+            p.WriteInt(objectId);
+            p.WriteInt(attributes.Count);
+
+            foreach (var attribute in attributes)
+            {
+                
+            }
 
             return p;
         }

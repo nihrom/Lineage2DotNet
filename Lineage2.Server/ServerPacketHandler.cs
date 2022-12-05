@@ -11,30 +11,34 @@ namespace Lineage2.Server
     public class ServerPacketHandler
     {
         private readonly ILogger logger = Log.Logger.ForContext<ServerPacketHandler>();
-        private static readonly ConcurrentDictionary<byte, Func<Packet, Task>> ClientPackets = new ConcurrentDictionary<byte, Func<Packet, Task>>();
-        private static readonly ConcurrentDictionary<byte, Func<Packet, Task>> ClientPacketsD0 = new ConcurrentDictionary<byte, Func<Packet, Task>>();
+
+        private readonly ConcurrentDictionary<byte, Func<Packet, Task>> clientPackets = new();
+        private readonly ConcurrentDictionary<byte, Func<Packet, Task>> clientPacketsD0 = new();
 
         public ServerPacketHandler(PacketController packetController)
         {
-            ClientPackets.TryAdd(0x00, packetController.ProtocolVersion);
-            ClientPackets.TryAdd(0x01, packetController.MoveBackwardToLocation);
-            ClientPackets.TryAdd(0x03, packetController.EnterWorld);
-            ClientPackets.TryAdd(0x08, packetController.AuthLogin);
-            ClientPackets.TryAdd(0x09, packetController.Logout);
-            ClientPackets.TryAdd(0x0d, packetController.CharacterSelected);
-            ClientPackets.TryAdd(0xcd, packetController.RequestShowMiniMap);
+            clientPackets.TryAdd(0x00, packetController.ProtocolVersion);
+            clientPackets.TryAdd(0x01, packetController.MoveBackwardToLocation);
+            clientPackets.TryAdd(0x03, packetController.EnterWorld);
+            clientPackets.TryAdd(0x04, packetController.RequestAction);
+            clientPackets.TryAdd(0x08, packetController.AuthLogin);
+            clientPackets.TryAdd(0x09, packetController.Logout);
+            clientPackets.TryAdd(0x0d, packetController.CharacterSelected);
+            clientPackets.TryAdd(0x48, packetController.ValidatePosition);
+            clientPackets.TryAdd(0xcd, packetController.RequestShowMiniMap);
 
-            ClientPacketsD0.TryAdd(0x08, packetController.ExSendManorList);
+            clientPacketsD0.TryAdd(0x08, packetController.ExSendManorList);
         }
 
         public async Task Handle(Packet packet)
         {
             logger.Information($"Получен пакет с Opcode:{packet.FirstOpcode:X2}"); //for State:{client.State}");
 
-            var optocode = packet.FirstOpcode;
-            if(optocode != 0xD0)
+            var opcode = packet.FirstOpcode;
+
+            if(opcode != 0xD0)
             {
-                if (ClientPackets.TryGetValue(optocode, out var action))
+                if (clientPackets.TryGetValue(opcode, out var action))
                 {
                     await action(packet);
                 }
@@ -46,7 +50,8 @@ namespace Lineage2.Server
             else
             {
                 var optocodeD0 = (byte)packet.SecondOpcode;
-                if (ClientPacketsD0.TryGetValue(optocodeD0, out var action))
+
+                if (clientPacketsD0.TryGetValue(optocodeD0, out var action))
                 {
                     await action(packet);
                 }
