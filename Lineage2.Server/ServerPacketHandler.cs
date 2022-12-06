@@ -32,7 +32,9 @@ namespace Lineage2.Server
 
         public async Task Handle(Packet packet)
         {
-            logger.Information($"Получен пакет с Opcode:{packet.FirstOpcode:X2}"); //for State:{client.State}");
+            logger.Information(
+                "Получен пакет с Opcode:{FirstOpcode:X2}",
+                packet.FirstOpcode);
 
             var opcode = packet.FirstOpcode;
 
@@ -44,20 +46,24 @@ namespace Lineage2.Server
                 }
                 else
                 {
-                    logger.Error($"Для пакета Opcode:{packet.FirstOpcode:X2} нет обработчика");
+                    logger.Error(
+                        "Для пакета Opcode:{FirstOpcode:X2} нет обработчика",
+                        packet.FirstOpcode);
                 }
             }
             else
             {
-                var optocodeD0 = (byte)packet.SecondOpcode;
+                var opcodeD0 = (byte)packet.SecondOpcode;
 
-                if (clientPacketsD0.TryGetValue(optocodeD0, out var action))
+                if (clientPacketsD0.TryGetValue(opcodeD0, out var action))
                 {
                     await action(packet);
                 }
                 else
                 {
-                    logger.Error($"Для пакета D0 c SecondOpcode:{packet.SecondOpcode:X2} нет обработчика");
+                    logger.Error(
+                        "Для пакета D0 c SecondOpcode:{SecondOpcode:X2} нет обработчика",
+                        packet.SecondOpcode);
                 }
             }
         }

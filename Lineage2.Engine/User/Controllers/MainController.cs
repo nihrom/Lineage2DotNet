@@ -18,11 +18,10 @@ namespace Lineage2.Engine.User.Controllers
 
         //IL2PlayersRepository playersRepository;
 
-        L2Player L2Player { get; set; }
+        private L2Player L2Player { get; set; }
 
-        WorldLauncher worldLauncher;
-
-
+        private readonly WorldLauncher worldLauncher;
+        
         private int keyOk;
 
         public MainController(WorldLauncher worldLauncher, UserAvatar userAvatar)
@@ -48,7 +47,7 @@ namespace Lineage2.Engine.User.Controllers
 
         public async Task ProtocolVersion(int protocol)
         {
-            logger.Information("Протокол соединения: {0}", protocol);
+            logger.Information("Протокол соединения: {Protocol}", protocol);
 
             await UserAvatar.MainOutput.ProtocolSend();
         }
@@ -61,12 +60,17 @@ namespace Lineage2.Engine.User.Controllers
 
         public async Task AuthLogin(string loginName, int playKey1, int playKey2, int loginKey1, int loginKey2)
         {
-            logger.Information("AuthLogin с неймом - {0} и ключами - {1},{2},{3},{4}", loginName, playKey1, playKey2, loginKey1, loginKey2);
+            logger.Information(
+                "AuthLogin с loginName - {LoginName} и ключами - {PlayKey1}, {PlayKey2}, {LoginKey1}, {LoginKey2}",
+                loginName,
+                playKey1,
+                playKey2,
+                loginKey1,
+                loginKey2);
 
             keyOk = playKey1;
 
-            List<L2Player> players = new List<L2Player>();
-            players.Add(L2Player);
+            var players = new List<L2Player> { L2Player };
 
             await UserAvatar.MainOutput.SendAccountCharList(players, keyOk);
         }
@@ -78,13 +82,17 @@ namespace Lineage2.Engine.User.Controllers
             await UserAvatar.MainOutput.UserInfo(L2Player);
 
             var npcs = worldLauncher.L2Npcs
-                .Where(s => s.Position.x < -56693 + 1000 && s.Position.x > -56693 - 1000 && s.Position.y < -113610 + 1000 && s.Position.y > -113610 - 1000)
+                .Where(s => 
+                    s.Position.x < -56693 + 1000 &&
+                    s.Position.x > -56693 - 1000 &&
+                    s.Position.y < -113610 + 1000 &&
+                    s.Position.y > -113610 - 1000)
                 .Take(50)
                 .ToList();
 
             await UserAvatar.MainOutput.NpcInfo(npcs);
 
-            logger.Information("Отправлено {0} NpcInfo", npcs.Count);
+            logger.Information("Отправлено {Count} NpcInfo", npcs.Count);
         }
 
         public async Task RequestAction(int objectId, Vector3 position, byte actionId)
@@ -108,7 +116,10 @@ namespace Lineage2.Engine.User.Controllers
 
         public async Task MoveBackwardToLocation(Vector3 current, Vector3 destination)
         {
-            logger.Information($"CurrentPostition {"x:" + current.x + ", y:" + current.y + ", z:" + current.z}, destinationPosition {"x:" + destination.x + ", y:" + destination.y + ", z:" + destination.z}");
+            logger.Information(
+                "CurrentPosition: {@Current}, destinationPosition {@Destination}",
+                current,
+                destination);
 
             await UserAvatar.MainOutput.MoveBackwardToLocation(L2Player, current, destination);
         }
