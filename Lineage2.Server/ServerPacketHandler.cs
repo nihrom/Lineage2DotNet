@@ -37,7 +37,7 @@ namespace Lineage2.Server
             clientPackets.TryAdd(0x04, packetController.RequestAction);
             clientPackets.TryAdd(0x08, packetController.AuthLogin); //TODO: Connected packet?
             clientPackets.TryAdd(0x09, packetController.Logout);
-            // clientPackets.TryAdd(0x0a, packetController.AttackRequest);
+            //clientPackets.TryAdd(0x0a, packetController.AttackRequest);
             clientPackets.TryAdd(0x0d, packetController.CharacterSelected);  //TODO: Authed packet?
             // clientPackets.TryAdd(0x0f, packetController.RequestItemList);
             // clientPackets.TryAdd(0x10, packetController.RequestEquipItem); //RequestEquipItem ... not used any more, instead "useItem"
