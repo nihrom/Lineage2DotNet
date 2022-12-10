@@ -332,7 +332,7 @@ namespace Lineage2.Network
         }
 
         /// <summary>
-        /// Reads <see cref="int"/> value from packet buffer.
+        /// Reads <see cref="int"/> value from packet buffer. readD
         /// </summary>
         /// <returns><see cref="int"/> value.</returns>
         public unsafe int ReadInt()

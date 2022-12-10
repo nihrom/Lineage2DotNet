@@ -105,5 +105,21 @@ namespace Lineage2.Server
         {
             await mainController.RequestShowMiniMap();
         }
+
+        public Task AttackRequest(Packet packet)
+        {
+            var objectId = readD();
+            var originX = readD();
+            var originY = readD();
+            var originZ = readD();
+            var isShiftAction = readC() != 0;
+            
+            //TODO: implementation
+        }
+
+        public Task RequestItemList(Packet arg)
+        {
+            //TODO: ничего не вычитывает. implementation
+        }
     }
 }
